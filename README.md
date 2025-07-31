@@ -31,7 +31,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs fa2tab
-🔴 Generate a .tsv file with basic information about each sequence.
+🟡 Generate a .tsv file with basic information about each sequence.
 
 `fasta_rs fa2tab --fasta <sequences.fasta> <optional_args>`
 

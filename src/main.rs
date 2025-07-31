@@ -2,6 +2,7 @@ use clap::Parser;
 use simple_logger::SimpleLogger;
 
 mod common;
+mod fa2tab;
 mod head;
 mod homopolymers;
 mod stats;

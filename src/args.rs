@@ -33,7 +33,13 @@ pub enum SubCommand {
         #[clap(short, long, default_value = "stats.json")]
         outfile: PathBuf,
     },
-    Fa2tab {},
+    Fa2tab {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(short, long, default_value = "fa2tab.tsv")]
+        outfile: PathBuf,
+    },
     Homopolymers {
         #[clap(short, long)]
         fasta: PathBuf,
