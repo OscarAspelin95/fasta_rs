@@ -16,8 +16,12 @@ Run with:<br>
 `fasta_rs <subcommand> <args>`
 
 ## Subcommands
+🔴 Not implemented yet (but planning to).<br>
+🟡 Implemented but not tested/fully featured.<br>
+🟢 Implemented and tested!
+
 ### fasta_rs stats
-🚧 Calculate basic stats such as num sequences, total length, gc content, etc.
+🟡 Calculate basic stats such as num sequences, total length, gc content, etc.
 
 `fasta_rs stats --fasta <sequences.fasta> <optional_args>`
 
@@ -27,7 +31,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs fa2tab
-🚧 Generate a .tsv file with basic information about each sequence.
+🔴 Generate a .tsv file with basic information about each sequence.
 
 `fasta_rs fa2tab --fasta <sequences.fasta> <optional_args>`
 
@@ -37,19 +41,19 @@ Optional arguments:
 </pre>
 
 ### fasta_rs homopolymners
-🚧 Find homopolymers in sequences.
+🟡 Find homopolymers in sequences.
 
 `fasta_rs homopolymers --fasta <sequences.fasta> <optional_args>`
 
 Optional arguments:
 <pre>
-<b>--min-hp-len</b> [5] - Min homopolymer length to consider.
-<b>--strict</b> [false] - Treat uppercase and lowercase nucleotides as different. E.g., AAAAA and aaaaa will be considered separate.
+<b>-m/--min-hp-len</b> [5] - Min homopolymer length to consider.
+<b>-s/--strict</b> [false] - Treat uppercase and lowercase nucleotides as different. E.g., AAAAA and aaaaa will be considered separate.
 <b>-o/--outfile</b> [homopolymers.tsv] - Output file.
 </pre>
 
 ### fasta_rs query
-🚧 Query/filter sequences based on certain criteria.
+🔴 Query/filter sequences based on certain criteria.
 
 `fasta_rs query --fasta <sequences.fasta> <optional_args>`
 
@@ -75,7 +79,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs sample
-🚧 (down)sample sequences based on a number of proportion.
+🔴 (down)sample sequences based on a number of proportion.
 
 `fasta_rs sample --fasta <sequences.fasta> <optional_args>`
 
@@ -83,13 +87,13 @@ Optional arguments:
 <pre>
 <b>-n/--num_seqs</b> [1] - Num seqs to keep.
 
-<b>--frac_seqs</b> [0.5] - Frac seqs to keep.
+<b>-f/--frac_seqs</b> [0.5] - Frac seqs to keep.
 
 <b>-o/--outfile</b> [sample.fasta] - Output file.
 </pre>
 
 ### fasta_rs sort
-🚧 Sort sequences by a given metric.
+🔴 Sort sequences by a given metric.
 
 
 `fasta_rs sort --fasta <sequences.fasta> <optional_args>`
@@ -108,7 +112,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs shuffle
-🚧 Randomly shuffle sequences.
+🔴 Randomly shuffle sequences.
 
 
 `fasta_rs shuffle --fasta <sequences.fasta> <optional_args>`
@@ -127,7 +131,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs head
-🚧 View the first n sequences.
+🟡 View the first n sequences.
 
 `fasta_rs head --fasta <sequences.fasta> <optional_args>`
 
