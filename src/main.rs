@@ -1,45 +1,20 @@
-use std::path::PathBuf;
+use clap::Parser;
+use simple_logger::SimpleLogger;
 
-use clap::{Args, Parser, Subcommand};
+mod common;
+mod head;
+mod stats;
 
-#[derive(Debug, Parser)]
-struct App {
-    #[clap(subcommand)]
-    command: SubCommand,
+mod dispatch;
+use dispatch::dispatch;
 
-    #[clap(flatten)]
-    global_opts: GlobalOpts,
-}
+mod args;
+use args::App;
 
-#[derive(Debug, Args)]
-struct GlobalOpts {
-    #[clap(short, long, global = true, required = false, default_value_t = 8)]
-    threads: usize,
-}
-
-#[derive(Debug, Subcommand)]
-enum SubCommand {
-    Stats {
-        #[clap(short, long)]
-        fasta: PathBuf,
-
-        #[clap(long, default_value_t = 0)]
-        min_len: usize,
-
-        #[clap(long, default_value_t = usize::MAX)]
-        max_len: usize,
-
-        #[clap(short, long)]
-        outfile: PathBuf,
-    },
-    Sort {},
-    Sample {},
-    Shuffle {},
-}
-
-#[allow(unused)]
 fn main() {
+    SimpleLogger::new().init().unwrap();
+
     let args = App::parse();
 
-    println!("{:?}", args);
+    dispatch(args);
 }
