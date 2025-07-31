@@ -13,7 +13,14 @@ pub struct App {
 
 #[derive(Debug, Args)]
 pub struct GlobalOpts {
-    #[clap(short, long, global = true, required = false, default_value_t = 8)]
+    #[clap(
+        short,
+        long,
+        global = true,
+        required = false,
+        default_value_t = 8,
+        help = "Not applicable to all subcommands."
+    )]
     pub threads: usize,
 }
 
@@ -23,7 +30,7 @@ pub enum SubCommand {
         #[clap(short, long)]
         fasta: PathBuf,
 
-        #[clap(short, long)]
+        #[clap(short, long, default_value = "stats.json")]
         outfile: PathBuf,
     },
     Fa2Tab {},
