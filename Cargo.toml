@@ -12,3 +12,4 @@ serde = { version = "1.0.219", features = ["derive"] }
 serde_json = { version = "1.0.141" }
 simple_logger = { version = "5.0.0" }
 thiserror = { version = "2.0.12" }
+needletail = { version = "0.6.3" }

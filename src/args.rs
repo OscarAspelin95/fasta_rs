@@ -23,12 +23,6 @@ pub enum SubCommand {
         #[clap(short, long)]
         fasta: PathBuf,
 
-        #[clap(long, default_value_t = 0)]
-        min_len: usize,
-
-        #[clap(long, default_value_t = usize::MAX)]
-        max_len: usize,
-
         #[clap(short, long)]
         outfile: PathBuf,
     },
