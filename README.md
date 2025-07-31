@@ -23,12 +23,7 @@ Run with:<br>
 
 Optional arguments:
 <pre>
-<b>--min_len</b> [0] - Min len to consider sequence.
-
-<b>--max_len</b> [u64::MAX] - Max len to consider sequence.
-
-<b>--outfile</b> [stats.json] - Output file.
-
+<b>-o/--outfile</b> [stats.json] - Output file.
 </pre>
 
 ### fasta_rs sample
@@ -38,12 +33,11 @@ Optional arguments:
 
 Optional arguments:
 <pre>
-<b>--num_seqs</b> [1] - Num seqs to keep.
+<b>-n/--num_seqs</b> [1] - Num seqs to keep.
 
 <b>--frac_seqs</b> [0.5] - Frac seqs to keep.
 
-<b>--outfile</b> [sample.fasta] - Output file.
-
+<b>-o/--outfile</b> [sample.fasta] - Output file.
 </pre>
 
 ### fasta_rs sort
@@ -56,13 +50,13 @@ Optional arguments:
 <pre>
 <b>--by_len</b> [false] - Sort by ascending length.
 
-<b>--by_gc</b> [false] - Sort by ascending gc content.
-
 <b>--by_id</b> [false] - Sort by ascending sequence id.
 
-<b>--reverse</b> [false] - Sort in descending order.
+<b>--by_gc</b> [false] - Sort by ascending gc content.
 
-<b>--outfile</b> [sorted.fasta] - Output file.
+<b>-r/--reverse</b> [false] - Sort in descending order.
+
+<b>-o/--outfile</b> [sorted.fasta] - Output file.
 </pre>
 
 ### fasta_rs shuffle
@@ -75,13 +69,13 @@ Optional arguments:
 <pre>
 <b>--by_len</b> [false] - Sort by ascending length.
 
-<b>--by_gc</b> [false] - Sort by ascending gc content.
-
 <b>--by_id</b> - Sort by ascending sequence id.
 
-<b>--reverse</b> - Sort in descending order.
+<b>--by_gc</b> [false] - Sort by ascending gc content.
 
-<b>--outfile</b> [shuffled.fasta] - Output file.
+<b>-r/--reverse</b> - Sort in descending order.
+
+<b>-o/--outfile</b> [shuffled.fasta] - Output file.
 </pre>
 
 ### fasta_rs head
@@ -91,5 +85,5 @@ Optional arguments:
 
 Optional arguments:
 <pre>
-<b>--num_seqs</b> [5] - Number of sequences to output.
+<b>-n/--num_seqs</b> [5] - Number of sequences to output.
 </pre>
