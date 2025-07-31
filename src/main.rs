@@ -3,6 +3,7 @@ use simple_logger::SimpleLogger;
 
 mod common;
 mod head;
+mod homopolymers;
 mod stats;
 
 mod dispatch;

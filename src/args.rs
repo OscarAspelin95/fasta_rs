@@ -33,9 +33,23 @@ pub enum SubCommand {
         #[clap(short, long, default_value = "stats.json")]
         outfile: PathBuf,
     },
-    Fa2Tab {},
-    Sort {},
+    Fa2tab {},
+    Homopolymers {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(short, long, default_value_t = 5)]
+        min_hp_len: usize,
+
+        #[clap(short, long)]
+        strict: bool,
+
+        #[clap(short, long, default_value = "homopolymers.json")]
+        outfile: PathBuf,
+    },
+    Query {},
     Sample {},
+    Sort {},
     Shuffle {},
     Head {
         #[clap(short, long)]
