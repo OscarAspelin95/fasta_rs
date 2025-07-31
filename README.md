@@ -83,3 +83,13 @@ Optional arguments:
 
 <b>--outfile</b> [shuffled.fasta] - Output file.
 </pre>
+
+### fasta_rs head
+🚧 View the first n sequences.
+
+`fasta_rs head --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>--num_seqs</b> [5] - Number of sequences to output.
+</pre>
