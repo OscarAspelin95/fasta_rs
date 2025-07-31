@@ -26,6 +26,54 @@ Optional arguments:
 <b>-o/--outfile</b> [stats.json] - Output file.
 </pre>
 
+### fasta_rs fa2tab
+🚧 Generate a .tsv file with basic information about each sequence.
+
+`fasta_rs fa2tab --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>-o/--outfile</b> [stats.tsv] - Output file.
+</pre>
+
+### fasta_rs homopolymners
+🚧 Find homopolymers in sequences.
+
+`fasta_rs homopolymers --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>--min-hp-len</b> [5] - Min homopolymer length to consider.
+<b>--strict</b> [false] - Treat uppercase and lowercase nucleotides as different. E.g., AAAAA and aaaaa will be considered separate.
+<b>-o/--outfile</b> [homopolymers.tsv] - Output file.
+</pre>
+
+### fasta_rs query
+🚧 Query/filter sequences based on certain criteria.
+
+`fasta_rs query --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>--min-len</b> [0] - Minimum sequence length.
+
+<b>--max-len</b> [u64::MAX] - Maximum sequence length.
+
+<b>--min-gc</b> [0.0] - Minimum GC content.
+
+<b>--max-gc</b> [1.0] - Maximum GC content.
+
+<b>--min-ambig</b> [0.0] - Minimum fraction ambiguous bases.
+
+<b>--max-ambig</b> [1.0] - Maximum fraction ambiguous bases.
+
+<b>--min-softmask</b> [0.0] - Minimum fraction softmasked bases.
+
+<b>--max-ambig</b> [1.0] - Maximum fraction softmaskes bases.
+
+<b>-o/--outfile</b> [query.fasta] - Output file.
+</pre>
+
 ### fasta_rs sample
 🚧 (down)sample sequences based on a number of proportion.
 
