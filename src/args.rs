@@ -50,7 +50,7 @@ pub enum SubCommand {
         #[clap(short, long)]
         strict: bool,
 
-        #[clap(short, long, default_value = "homopolymers.json")]
+        #[clap(short, long, default_value = "homopolymers.tsv")]
         outfile: PathBuf,
     },
     Query {},
@@ -63,5 +63,15 @@ pub enum SubCommand {
 
         #[clap(short, long)]
         num_seqs: usize,
+    },
+    Amplicon {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(short, long)]
+        primers: PathBuf,
+
+        #[clap(short, long, default_value = "amplicons.tsv")]
+        outfile: PathBuf,
     },
 }

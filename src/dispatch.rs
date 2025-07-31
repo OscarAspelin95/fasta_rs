@@ -1,7 +1,6 @@
-use std::path::PathBuf;
-
 use crate::args::{App, SubCommand};
 
+use crate::amplicon::fasta_amplicon;
 use crate::fa2tab::fasta_fa2tab;
 use crate::head::fasta_head;
 use crate::homopolymers::fasta_homopolymers;
@@ -18,6 +17,11 @@ pub fn dispatch(args: App) {
             strict,
             outfile,
         } => fasta_homopolymers(&fasta, min_hp_len, strict, &outfile).unwrap(),
+        SubCommand::Amplicon {
+            fasta,
+            primers,
+            outfile,
+        } => fasta_amplicon(&fasta, &primers, &outfile).unwrap(),
         _ => todo!(),
     };
 }

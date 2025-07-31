@@ -1,6 +1,7 @@
 use clap::Parser;
 use simple_logger::SimpleLogger;
 
+mod amplicon;
 mod common;
 mod fa2tab;
 mod head;

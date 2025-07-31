@@ -10,4 +10,16 @@ pub enum AppError {
 
     #[error("Invalid file extension")]
     InvalidExtensionError,
+
+    #[error("Failed to parse primer file.")]
+    PrimerFileParsingError,
+
+    #[error("Failed to parse primer line.")]
+    PrimerLineFormatError,
+
+    #[error("Invalid primer length.")]
+    PrimerLenParsingError,
+
+    #[error("Failed to find any primers.")]
+    NoPrimersFoundError,
 }

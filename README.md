@@ -119,14 +119,6 @@ Optional arguments:
 
 Optional arguments:
 <pre>
-<b>--by_len</b> [false] - Sort by ascending length.
-
-<b>--by_id</b> - Sort by ascending sequence id.
-
-<b>--by_gc</b> [false] - Sort by ascending gc content.
-
-<b>-r/--reverse</b> - Sort in descending order.
-
 <b>-o/--outfile</b> [shuffled.fasta] - Output file.
 </pre>
 
@@ -138,4 +130,14 @@ Optional arguments:
 Optional arguments:
 <pre>
 <b>-n/--num_seqs</b> [5] - Number of sequences to output.
+</pre>
+
+### fasta_rs amplicon
+🟡 In silico PCR by exact primer matching.
+
+`fasta_rs amplicon --fasta <sequences.fasta> --primers <primers.tsv> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>-o/--outfile</b> [amplicons.tsv] - Output file.
 </pre>

@@ -422,6 +422,7 @@ dependencies = [
  "bio",
  "clap",
  "log",
+ "memchr",
  "needletail",
  "rayon",
  "serde",
