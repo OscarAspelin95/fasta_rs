@@ -1,22 +1,21 @@
-use crate::common::fasta_reader;
+use crate::common::{AppError, needletail_fasta_reader};
 use log::warn;
 use std::path::PathBuf;
 
-pub fn fasta_head(fasta: &PathBuf, num_seqs: usize) {
-    let reader = fasta_reader(fasta).unwrap();
-
-    let mut records = reader.records();
+pub fn fasta_head(fasta: &PathBuf, num_seqs: usize) -> Result<(), AppError> {
+    let mut reader = needletail_fasta_reader(fasta)?;
 
     let mut n: usize = 0;
-    while let Some(record) = records.next() {
+    while let Some(record) = reader.next() {
         match record {
             Ok(record) => {
                 n += 1;
 
                 println!(
                     ">{}\n{}",
-                    record.id(),
-                    std::str::from_utf8(record.seq()).unwrap()
+                    std::str::from_utf8(record.id())
+                        .expect("Record ID has invalid UTF-8 encoding."),
+                    std::str::from_utf8(&record.seq()).expect("Record has invalid UTF-8 encoding.")
                 );
             }
             Err(e) => {
@@ -29,4 +28,6 @@ pub fn fasta_head(fasta: &PathBuf, num_seqs: usize) {
             break;
         }
     }
+
+    Ok(())
 }
