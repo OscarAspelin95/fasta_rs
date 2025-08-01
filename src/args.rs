@@ -26,6 +26,13 @@ pub struct GlobalOpts {
 
 #[derive(Debug, Subcommand)]
 pub enum SubCommand {
+    Split {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(short, long, default_value = "fasta_split")]
+        outdir: PathBuf,
+    },
     Stats {
         #[clap(short, long)]
         fasta: PathBuf,

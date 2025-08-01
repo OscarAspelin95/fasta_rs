@@ -6,6 +6,7 @@ mod common;
 mod fa2tab;
 mod head;
 mod homopolymers;
+mod split;
 mod stats;
 
 mod dispatch;

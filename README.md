@@ -20,6 +20,16 @@ Run with:<br>
 🟡 Implemented but not tested/fully featured.<br>
 🟢 Implemented and tested!
 
+### fasta_rs split
+🟡 Split into one file per sequence.
+
+`fasta_rs split --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>-o/--outdir</b> [fasta_split] - Output directory.
+</pre>
+
 ### fasta_rs stats
 🟡 Calculate basic stats such as num sequences, total length, gc content, etc.
 
@@ -48,7 +58,9 @@ Optional arguments:
 Optional arguments:
 <pre>
 <b>-m/--min-hp-len</b> [5] - Min homopolymer length to consider.
+
 <b>-s/--strict</b> [false] - Treat uppercase and lowercase nucleotides as different. E.g., AAAAA and aaaaa will be considered separate.
+
 <b>-o/--outfile</b> [homopolymers.tsv] - Output file.
 </pre>
 
@@ -79,7 +91,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs sample
-🔴 (down)sample sequences based on a number of proportion.
+🔴 (down)sample sequences based on a number or proportion.
 
 `fasta_rs sample --fasta <sequences.fasta> <optional_args>`
 

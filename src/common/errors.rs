@@ -2,15 +2,25 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum AppError {
+    #[error("Invalid UTF-8")]
+    InvalidUtf8Error,
+
+    #[error("Could not create directory")]
+    FailedToCreateDirError,
+
     #[error("File does not exist")]
     FileDoesNotExistError,
 
-    #[error("Failed to fasta file")]
+    #[error("Failed to read fasta file")]
     FastaReadError,
+
+    #[error("Failed to write to fasta file")]
+    FastaWriteError,
 
     #[error("Invalid file extension")]
     InvalidExtensionError,
 
+    // Amplicon Primer Errors.
     #[error("Failed to parse primer file.")]
     PrimerFileParsingError,
 
