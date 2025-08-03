@@ -50,7 +50,7 @@ Optional arguments:
 <b>-o/--outfile</b> [stats.tsv] - Output file.
 </pre>
 
-### fasta_rs homopolymners
+### fasta_rs homopolymers
 🟡 Find homopolymers in sequences.
 
 `fasta_rs homopolymers --fasta <sequences.fasta> <optional_args>`
@@ -64,10 +64,10 @@ Optional arguments:
 <b>-o/--outfile</b> [homopolymers.tsv] - Output file.
 </pre>
 
-### fasta_rs query
-🔴 Query/filter sequences based on certain criteria.
+### fasta_rs filter
+🔴 Filter sequences based on certain criteria.
 
-`fasta_rs query --fasta <sequences.fasta> <optional_args>`
+`fasta_rs filter --fasta <sequences.fasta> <optional_args>`
 
 Optional arguments:
 <pre>
@@ -85,7 +85,25 @@ Optional arguments:
 
 <b>--min-softmask</b> [0.0] - Minimum fraction softmasked bases.
 
-<b>--max-ambig</b> [1.0] - Maximum fraction softmaskes bases.
+<b>--max-softmask</b> [1.0] - Maximum fraction softmaskes bases.
+
+<b>--min-entropy</b> [0.0] - Minimum Shannon Entropy.
+
+<b>--max-entropy</b> [100.0] - Maximum Shannon Entropy.
+
+<b>-o/--outfile</b> [query.fasta] - Output file.
+</pre>
+
+### fasta_rs extract
+🔴 Extract sub-sequences based on provided range.
+
+`fasta_rs extract --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>-s/--start</b> [0] - Start coordinate (1-based offset, e.g., -s 1 means the 1st base).
+
+<b>-e/--end</b> [u64::MAX] - End coordinate (1-based offset, e.g., -e 10 means the 10th base).
 
 <b>-o/--outfile</b> [query.fasta] - Output file.
 </pre>

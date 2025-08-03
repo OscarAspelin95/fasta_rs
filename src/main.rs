@@ -4,6 +4,7 @@ use simple_logger::SimpleLogger;
 mod amplicon;
 mod common;
 mod fa2tab;
+mod filter;
 mod head;
 mod homopolymers;
 mod split;

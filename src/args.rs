@@ -60,7 +60,48 @@ pub enum SubCommand {
         #[clap(short, long, default_value = "homopolymers.tsv")]
         outfile: PathBuf,
     },
-    Query {},
+    Filter {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        // Length filter.
+        #[clap(long, default_value_t = 0)]
+        min_len: usize,
+
+        #[clap(long, default_value_t = usize::MAX)]
+        max_len: usize,
+
+        // GC filter.
+        #[clap(long, default_value_t = 0.0)]
+        min_gc: f32,
+
+        #[clap(long, default_value_t = 1.0)]
+        max_gc: f32,
+
+        // Ambig filter.
+        #[clap(long, default_value_t = 0.0)]
+        min_ambig: f32,
+
+        #[clap(long, default_value_t = 1.0)]
+        max_ambig: f32,
+
+        // Softmask filter.
+        #[clap(long, default_value_t = 0.0)]
+        min_softmask: f32,
+
+        #[clap(long, default_value_t = 1.0)]
+        max_softmask: f32,
+
+        // Shannon Entropy filter.
+        #[clap(long, default_value_t = 0.0)]
+        min_entropy: f32,
+
+        #[clap(long, default_value_t = 100.0)]
+        max_entropy: f32,
+
+        #[clap(short, long, default_value = "filter.fasta")]
+        outfile: PathBuf,
+    },
     Sample {},
     Sort {},
     Shuffle {},
