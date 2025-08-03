@@ -2,6 +2,7 @@ use crate::args::{App, SubCommand};
 
 use crate::amplicon::fasta_amplicon;
 use crate::fa2tab::fasta_fa2tab;
+use crate::filter::fasta_filter;
 use crate::head::fasta_head;
 use crate::homopolymers::fasta_homopolymers;
 use crate::split::fasta_split;
@@ -19,6 +20,34 @@ pub fn dispatch(args: App) {
             strict,
             outfile,
         } => fasta_homopolymers(&fasta, min_hp_len, strict, &outfile).unwrap(),
+        SubCommand::Filter {
+            fasta,
+            min_len,
+            max_len,
+            min_gc,
+            max_gc,
+            min_ambig,
+            max_ambig,
+            min_softmask,
+            max_softmask,
+            min_entropy,
+            max_entropy,
+            outfile,
+        } => fasta_filter(
+            &fasta,
+            min_len,
+            max_len,
+            min_gc,
+            max_gc,
+            min_ambig,
+            max_ambig,
+            min_softmask,
+            max_softmask,
+            min_entropy,
+            max_entropy,
+            &outfile,
+        )
+        .unwrap(),
         SubCommand::Amplicon {
             fasta,
             primers,
