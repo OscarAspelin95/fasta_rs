@@ -51,8 +51,9 @@ pub fn dispatch(args: App) {
         SubCommand::Amplicon {
             fasta,
             primers,
+            search_type,
             outfile,
-        } => fasta_amplicon(&fasta, &primers, &outfile).unwrap(),
+        } => fasta_amplicon(&fasta, &primers, &search_type, &outfile).unwrap(),
         _ => todo!(),
     };
 }

@@ -163,11 +163,20 @@ Optional arguments:
 </pre>
 
 ### fasta_rs amplicon
-🟡 In silico PCR by exact primer matching.
+🟡 In silico PCR by exact or fuzzy primer matching.
 
-`fasta_rs amplicon --fasta <sequences.fasta> --primers <primers.tsv> <optional_args>`
+`fasta_rs amplicon --fasta <sequences.fasta> --primers <primers.tsv> --search-type {exact, fuzzy} <optional_args>`
 
 Optional arguments:
 <pre>
 <b>-o/--outfile</b> [amplicons.tsv] - Output file.
 </pre>
+
+#### primer file
+The primer.tsv TAB separated file needs to specifies the following for each primer pair:
+- Primer name.
+- Forward primer sequence (5' -> 3').
+- Reverse primer sequence (5' -> 3').
+- Expected minimum length of insert size.
+- Expected maximum length of insert size.
+- Num allowed mismatches (only for fuzzy search).

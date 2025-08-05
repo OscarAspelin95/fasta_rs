@@ -1,6 +1,12 @@
 use std::path::PathBuf;
 
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, ValueEnum};
+
+#[derive(Debug, Clone, ValueEnum)]
+pub enum SearchType {
+    Exact,
+    Fuzzy,
+}
 
 #[derive(Debug, Parser)]
 pub struct App {
@@ -118,6 +124,9 @@ pub enum SubCommand {
 
         #[clap(short, long)]
         primers: PathBuf,
+
+        #[clap(short, long)]
+        search_type: SearchType,
 
         #[clap(short, long, default_value = "amplicons.tsv")]
         outfile: PathBuf,
