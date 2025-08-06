@@ -5,6 +5,7 @@ use crate::fa2tab::fasta_fa2tab;
 use crate::filter::fasta_filter;
 use crate::head::fasta_head;
 use crate::homopolymers::fasta_homopolymers;
+use crate::sort::fasta_sort;
 use crate::split::fasta_split;
 use crate::stats::fasta_stats;
 
@@ -20,6 +21,12 @@ pub fn dispatch(args: App) {
             strict,
             outfile,
         } => fasta_homopolymers(&fasta, min_hp_len, strict, &outfile).unwrap(),
+        SubCommand::Sort {
+            fasta,
+            by,
+            reverse,
+            outfile,
+        } => fasta_sort(&fasta, by, reverse, &outfile).unwrap(),
         SubCommand::Filter {
             fasta,
             min_len,

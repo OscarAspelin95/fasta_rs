@@ -1,25 +1,8 @@
+use crate::common::utils::nucleotide_probabilities;
 use crate::common::{AppError, needletail_fasta_reader};
-use std::collections::HashMap;
+use crate::common::{nucleotide_counts, shannon_entropy};
 use std::path::PathBuf;
 
-#[inline]
-fn shannon_entropy(probs: &Vec<f32>) -> f32 {
-    // Probabilities of each nucleotide.
-
-    let shannon: f32 = probs
-        .iter()
-        .map(|prob| match prob {
-            0_f32 => return 0 as f32,
-            // This is safe because prob is never negative since
-            // both count and sum_count are of type usize.
-            _ => {
-                return prob * prob.log2();
-            }
-        })
-        .sum();
-
-    return -shannon;
-}
 #[allow(unused)]
 pub fn fasta_filter(
     fasta: &PathBuf,
@@ -50,39 +33,13 @@ pub fn fasta_filter(
             continue;
         }
 
-        // Store canonical NTs, which is used for GC content and entropy.
-        let mut canonical: HashMap<&u8, usize> = HashMap::with_capacity(4);
-
-        // Counts of non-canonical nucleotides.
-        let mut softmasked_count: usize = 0;
-        let mut ambiguous_count: usize = 0;
-
         let record_seq = record.seq();
 
-        for nt in record_seq.iter() {
-            match nt {
-                // Canonical.
-                b'A' | b'C' | b'G' | b'T' => {
-                    canonical
-                        .entry(nt)
-                        .and_modify(|count| *count += 1)
-                        .or_insert(1);
-                }
-
-                // Softmasked.
-                b'a' | b'c' | b'g' | b't' => {
-                    softmasked_count += 1;
-                }
-
-                // Ambiguous
-                _ => {
-                    ambiguous_count += 1;
-                }
-            }
-        }
+        // Nucleotide counts.
+        let (canonical, softmask_count, ambiguous_count) = nucleotide_counts(&record_seq);
 
         // Softmask.
-        let softmask_fraction = softmasked_count as f32 / num_bases as f32;
+        let softmask_fraction = softmask_count as f32 / num_bases as f32;
         if softmask_fraction < min_softmask || softmask_fraction > max_softmask {
             continue;
         }
@@ -105,10 +62,7 @@ pub fn fasta_filter(
         }
 
         // Entropy
-        let probs: Vec<f32> = canonical
-            .values()
-            .map(|count| *count as f32 / canonical_count as f32)
-            .collect();
+        let probs: Vec<f32> = nucleotide_probabilities(&canonical);
 
         let entropy = shannon_entropy(&probs);
 

@@ -65,7 +65,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs filter
-🔴 Filter sequences based on certain criteria.
+🟡 Filter sequences based on certain criteria.
 
 `fasta_rs filter --fasta <sequences.fasta> <optional_args>`
 
@@ -123,18 +123,14 @@ Optional arguments:
 </pre>
 
 ### fasta_rs sort
-🔴 Sort sequences by a given metric.
+🟡 Sort sequences by a given metric.
 
 
 `fasta_rs sort --fasta <sequences.fasta> <optional_args>`
 
 Optional arguments:
 <pre>
-<b>--by_len</b> [false] - Sort by ascending length.
-
-<b>--by_id</b> [false] - Sort by ascending sequence id.
-
-<b>--by_gc</b> [false] - Sort by ascending gc content.
+<b>--by</b> [length] - {length, id, gc, entropy, softmask, ambiguous}.
 
 <b>-r/--reverse</b> [false] - Sort in descending order.
 

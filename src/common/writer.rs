@@ -1,4 +1,5 @@
 use crate::common::AppError;
+use bio::io::fasta::Writer;
 use serde::Serialize;
 use serde_json;
 use std::path::PathBuf;
@@ -16,4 +17,13 @@ pub fn get_bufwriter(outfile: &PathBuf) -> Result<BufWriter<File>, AppError> {
     let bufwriter = BufWriter::new(writer);
 
     return Ok(bufwriter);
+}
+
+// We might need BufWriter here...
+pub fn get_fasta_writer(outfile: &PathBuf) -> Result<Writer<BufWriter<File>>, AppError> {
+    let writer = Writer::new(BufWriter::new(
+        File::create(outfile).map_err(|_| AppError::FastaReadError)?,
+    ));
+
+    return Ok(writer);
 }

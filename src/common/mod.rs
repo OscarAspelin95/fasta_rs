@@ -8,4 +8,4 @@ pub mod writer;
 pub use writer::{get_bufwriter, write_json};
 
 pub mod utils;
-pub use utils::{gc_content, reverse_complement, usize_sub};
+pub use utils::{gc_content, nucleotide_counts, reverse_complement, shannon_entropy, usize_sub};
