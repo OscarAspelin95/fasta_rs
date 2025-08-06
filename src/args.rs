@@ -8,6 +8,16 @@ pub enum SearchType {
     Fuzzy,
 }
 
+#[derive(Debug, Clone, ValueEnum)]
+pub enum SortType {
+    Length,
+    Id,
+    Gc,
+    Entropy,
+    Softmask,
+    Ambiguous,
+}
+
 #[derive(Debug, Parser)]
 pub struct App {
     #[clap(subcommand)]
@@ -109,7 +119,19 @@ pub enum SubCommand {
         outfile: PathBuf,
     },
     Sample {},
-    Sort {},
+    Sort {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(value_enum, short, long, default_value_t = SortType::Length)]
+        by: SortType,
+
+        #[clap(short, long)]
+        reverse: bool,
+
+        #[clap(short, long)]
+        outfile: PathBuf,
+    },
     Shuffle {},
     Head {
         #[clap(short, long)]
