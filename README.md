@@ -95,7 +95,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs extract
-🔴 Extract sub-sequence based on provided range.
+🟡 Extract sub-sequence based on provided range.
 
 `fasta_rs extract --fasta <sequences.fasta> <optional_args>`
 
