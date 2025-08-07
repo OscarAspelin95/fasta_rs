@@ -1,6 +1,7 @@
 use crate::args::{App, SubCommand};
 
 use crate::amplicon::fasta_amplicon;
+use crate::extract::fasta_extract;
 use crate::fa2tab::fasta_fa2tab;
 use crate::filter::fasta_filter;
 use crate::head::fasta_head;
@@ -55,6 +56,12 @@ pub fn dispatch(args: App) {
             &outfile,
         )
         .unwrap(),
+        SubCommand::Extract {
+            fasta,
+            start,
+            end,
+            outfile,
+        } => fasta_extract(&fasta, start, end, &outfile).unwrap(),
         SubCommand::Amplicon {
             fasta,
             primers,

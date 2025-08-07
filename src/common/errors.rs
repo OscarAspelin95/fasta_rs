@@ -32,4 +32,7 @@ pub enum AppError {
 
     #[error("Failed to find any primers.")]
     NoPrimersFoundError,
+
+    #[error("Invalid range.")]
+    InvalidRangeError,
 }

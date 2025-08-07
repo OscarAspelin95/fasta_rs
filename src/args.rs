@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, usize};
 
 use clap::{Args, Parser, Subcommand, ValueEnum};
 
@@ -116,6 +116,19 @@ pub enum SubCommand {
         max_entropy: f32,
 
         #[clap(short, long, default_value = "filter.fasta")]
+        outfile: PathBuf,
+    },
+    Extract {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(short, long, default_value_t = 0)]
+        start: usize,
+
+        #[clap(short, long, default_value_t = usize::MAX)]
+        end: usize,
+
+        #[clap(short, long)]
         outfile: PathBuf,
     },
     Sample {},
