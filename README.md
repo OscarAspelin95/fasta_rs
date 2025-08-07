@@ -95,18 +95,20 @@ Optional arguments:
 </pre>
 
 ### fasta_rs extract
-🔴 Extract sub-sequences based on provided range.
+🔴 Extract sub-sequence based on provided range.
 
 `fasta_rs extract --fasta <sequences.fasta> <optional_args>`
 
 Optional arguments:
 <pre>
-<b>-s/--start</b> [0] - Start coordinate (1-based offset, e.g., -s 1 means the 1st base).
+<b>-s/--start</b> [0] - Start coordinate (BED offset).
 
-<b>-e/--end</b> [u64::MAX] - End coordinate (1-based offset, e.g., -e 10 means the 10th base).
+<b>-e/--end</b> [u64::MAX] - End coordinate (BED offset).
 
 <b>-o/--outfile</b> [query.fasta] - Output file.
 </pre>
+
+Since the coordinates are BED-compatible, extracting the ith base would be equivalent to using `-s i-1` and `-e i`
 
 ### fasta_rs sample
 🔴 (down)sample sequences based on a number or proportion.
@@ -176,3 +178,13 @@ The primer.tsv TAB separated file needs to specifies the following for each prim
 - Expected minimum length of insert size.
 - Expected maximum length of insert size.
 - Num allowed mismatches (only for fuzzy search).
+
+### fasta_rs reverse
+🔴 Reverse complement sequences.
+
+`fasta_rs reverse --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>-o/--outfile</b> [reverse.fasta] - Output file.
+</pre>
