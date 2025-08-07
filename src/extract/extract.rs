@@ -1,6 +1,6 @@
-use crate::common::{AppError, needletail_fasta_reader};
+use crate::common::{AppError, get_bufwriter, needletail_fasta_reader};
 use log::warn;
-use std::path::PathBuf;
+use std::{io::Write, path::PathBuf};
 
 pub fn fasta_extract(
     fasta: &PathBuf,
@@ -13,6 +13,8 @@ pub fn fasta_extract(
     if start >= end {
         return Err(AppError::InvalidRangeError);
     }
+
+    let mut writer = get_bufwriter(&outfile)?;
 
     while let Some(record) = reader.next() {
         match record {
@@ -32,12 +34,17 @@ pub fn fasta_extract(
                 // Add start/end coordinates.
                 let record_id_new = format!("{}|{}-{}", record_id, start, max_end);
 
-                println!(
-                    ">{}\n{}",
-                    record_id_new,
-                    std::str::from_utf8(&record.seq()[start..max_end])
-                        .expect("Record has invalid UTF-8 encoding.")
-                );
+                writer
+                    .write_all(
+                        format!(
+                            ">{}\n{}\n",
+                            record_id_new,
+                            std::str::from_utf8(&record.seq()[start..max_end])
+                                .expect("Record has invalid UTF-8 encoding.")
+                        )
+                        .as_bytes(),
+                    )
+                    .map_err(|_| AppError::FastaWriteError)?;
             }
             Err(e) => {
                 warn!("{:?}", e);
