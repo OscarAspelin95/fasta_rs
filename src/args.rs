@@ -128,7 +128,7 @@ pub enum SubCommand {
         #[clap(short, long, default_value_t = usize::MAX)]
         end: usize,
 
-        #[clap(short, long)]
+        #[clap(short, long, default_value = "extract.fasta")]
         outfile: PathBuf,
     },
     Sample {},
