@@ -6,6 +6,7 @@ use crate::fa2tab::fasta_fa2tab;
 use crate::filter::fasta_filter;
 use crate::head::fasta_head;
 use crate::homopolymers::fasta_homopolymers;
+use crate::sample::fasta_sample;
 use crate::sort::fasta_sort;
 use crate::split::fasta_split;
 use crate::stats::fasta_stats;
@@ -62,6 +63,7 @@ pub fn dispatch(args: App) {
             end,
             outfile,
         } => fasta_extract(&fasta, start, end, &outfile).unwrap(),
+        SubCommand::Sample { fasta, by, outfile } => fasta_sample(&fasta, by, &outfile).unwrap(),
         SubCommand::Amplicon {
             fasta,
             primers,

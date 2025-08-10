@@ -35,4 +35,7 @@ pub enum AppError {
 
     #[error("Invalid range.")]
     InvalidRangeError,
+
+    #[error("Invalid sample value")]
+    InvalidSampleValueError,
 }
