@@ -8,6 +8,7 @@ mod fa2tab;
 mod filter;
 mod head;
 mod homopolymers;
+mod sample;
 mod sort;
 mod split;
 mod stats;

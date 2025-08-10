@@ -111,15 +111,13 @@ Optional arguments:
 Since the coordinates are BED-compatible, extracting the ith base would be equivalent to using `-s i-1` and `-e i`
 
 ### fasta_rs sample
-🔴 (down)sample sequences based on a number or proportion.
+🟡 (down)sample sequences based on a number or proportion.
 
 `fasta_rs sample --fasta <sequences.fasta> <optional_args>`
 
 Optional arguments:
 <pre>
-<b>-n/--num_seqs</b> [1] - Num seqs to keep.
-
-<b>-f/--frac_seqs</b> [0.5] - Frac seqs to keep.
+<b>-b/--by</b> [1.0] - Num/fraction seqs to keep.
 
 <b>-o/--outfile</b> [sample.fasta] - Output file.
 </pre>

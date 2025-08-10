@@ -1,5 +1,4 @@
 use crate::args::SortType;
-use crate::common::get_bufwriter;
 use crate::common::utils::nucleotide_probabilities;
 use crate::common::writer::get_fasta_writer;
 use crate::common::{AppError, bio_fasta_reader, gc_content, nucleotide_counts, shannon_entropy};

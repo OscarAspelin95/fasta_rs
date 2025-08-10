@@ -131,7 +131,16 @@ pub enum SubCommand {
         #[clap(short, long, default_value = "extract.fasta")]
         outfile: PathBuf,
     },
-    Sample {},
+    Sample {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(short, long, default_value_t = 1.0)]
+        by: f32,
+
+        #[clap(short, long, default_value = "sample.fasta")]
+        outfile: PathBuf,
+    },
     Sort {
         #[clap(short, long)]
         fasta: PathBuf,
