@@ -15,6 +15,10 @@ The generated binary is available in `target/release/fasta_rs`.
 Run with:<br>
 `fasta_rs <subcommand> <args>`
 
+## ToDo
+- [ ] Automatically extract sample name.
+- [ ] Allow reading stdin/stdout to allow piping.
+
 ## Subcommands
 🔴 Not implemented yet (but planning to).<br>
 🟡 Implemented but not tested/fully featured.<br>
