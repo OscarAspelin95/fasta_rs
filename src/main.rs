@@ -9,6 +9,7 @@ mod filter;
 mod head;
 mod homopolymers;
 mod sample;
+mod shuffle;
 mod sort;
 mod split;
 mod stats;

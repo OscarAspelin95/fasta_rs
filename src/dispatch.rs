@@ -7,6 +7,7 @@ use crate::filter::fasta_filter;
 use crate::head::fasta_head;
 use crate::homopolymers::fasta_homopolymers;
 use crate::sample::fasta_sample;
+use crate::shuffle::fasta_shuffle;
 use crate::sort::fasta_sort;
 use crate::split::fasta_split;
 use crate::stats::fasta_stats;
@@ -29,6 +30,7 @@ pub fn dispatch(args: App) {
             reverse,
             outfile,
         } => fasta_sort(&fasta, by, reverse, &outfile).unwrap(),
+        SubCommand::Shuffle { fasta, outfile } => fasta_shuffle(&fasta, &outfile).unwrap(),
         SubCommand::Filter {
             fasta,
             min_len,
@@ -70,6 +72,5 @@ pub fn dispatch(args: App) {
             search_type,
             outfile,
         } => fasta_amplicon(&fasta, &primers, &search_type, &outfile).unwrap(),
-        _ => todo!(),
     };
 }
