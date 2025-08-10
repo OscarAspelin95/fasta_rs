@@ -154,7 +154,13 @@ pub enum SubCommand {
         #[clap(short, long)]
         outfile: PathBuf,
     },
-    Shuffle {},
+    Shuffle {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(short, long)]
+        outfile: PathBuf,
+    },
     Head {
         #[clap(short, long)]
         fasta: PathBuf,

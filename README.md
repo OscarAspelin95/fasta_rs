@@ -138,7 +138,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs shuffle
-🔴 Randomly shuffle sequences.
+🟡 Randomly shuffle sequences.
 
 
 `fasta_rs shuffle --fasta <sequences.fasta> <optional_args>`
