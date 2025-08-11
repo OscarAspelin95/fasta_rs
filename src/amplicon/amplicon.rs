@@ -4,6 +4,7 @@ use bio::pattern_matching::myers::MyersBuilder;
 use log::warn;
 use memchr::memmem;
 use rayon::prelude::*;
+use rstest::*;
 use std::collections::HashSet;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
@@ -13,6 +14,7 @@ use std::{
     io::{BufRead, BufReader, BufWriter, Write},
 };
 
+#[derive(PartialEq, Debug)]
 pub struct AmpliconResult<'a> {
     pub amplicon: &'a [u8],
     pub start: usize,
@@ -320,4 +322,25 @@ pub fn fasta_amplicon(
     });
 
     Ok(())
+}
+
+#[rstest]
+#[case(b"",
+    &PrimerPair { forward_primer: b"A".to_vec(), reverse_primer: b"A".to_vec(), primer_name: "some_primer".to_string(), min_len: 0, max_len: 10, num_mismatch: Some(0)},
+    vec![])]
+#[case(b"ATCGTTTTTATCG",
+    &PrimerPair { forward_primer: b"ATCG".to_vec(), reverse_primer: b"CGAT".to_vec(), primer_name: "some_primer".to_string(), min_len: 5, max_len: 5, num_mismatch: Some(0)},
+    vec![AmpliconResult { amplicon: b"TTTTT", start: 4, end: 4 + 5, insert_length: 5, total_length: 4 + 5 + 4}])]
+#[case(b"ATCGTTTTTATCGTTTTTATCG",
+    &PrimerPair { forward_primer: b"ATCG".to_vec(), reverse_primer: b"CGAT".to_vec(), primer_name: "some_primer".to_string(), min_len: 5, max_len: 5, num_mismatch: Some(0)},
+    vec![AmpliconResult { amplicon: b"TTTTT", start: 4, end: 4 + 5, insert_length: 5, total_length: 4 + 5 + 4},
+         AmpliconResult { amplicon: b"TTTTT", start: 13, end: 13 + 5, insert_length: 5, total_length: 4 + 5 + 4}
+    ])]
+
+fn test_amplicon_exact_match(
+    #[case] seq: &[u8],
+    #[case] primer_pair: &PrimerPair,
+    #[case] expected: Vec<AmpliconResult>,
+) {
+    assert_eq!(amplicon_exact_search(seq, primer_pair), expected)
 }

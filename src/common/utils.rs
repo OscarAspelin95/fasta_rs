@@ -1,3 +1,4 @@
+use rstest::*;
 use std::collections::HashMap;
 
 #[inline]
@@ -106,4 +107,63 @@ pub fn usize_sub(a: usize, b: usize) -> usize {
     }
 
     return 0;
+}
+
+#[rstest]
+#[case(b"", 0, 0)]
+#[case(b"A", 0, 0)]
+#[case(b"AAaaTTtt", 4, 0)]
+#[case(b"NNaattccggATCG", 8, 2)]
+fn test_nucleotide_counts(
+    #[case] seq: &[u8],
+    #[case] expected_softmasked: usize,
+    #[case] expected_ambiguous: usize,
+) {
+    let (_, num_softmasked, num_ambiguous) = nucleotide_counts(seq);
+
+    assert_eq!(num_softmasked, expected_softmasked);
+    assert_eq!(num_ambiguous, expected_ambiguous);
+}
+
+/// In these tests, we also check that not counting non-existing nucleotides
+/// is the same as setting non-existing nucleotide probabilities to 0.0.
+#[rstest]
+#[case(vec![], 0.0)]
+#[case(vec![0.0_f32, 0.0_f32, 0.0_f32, 0.0_f32], 0.0)]
+#[case(vec![1.0_f32], 0.0)]
+#[case(vec![1.0_f32, 0.0_f32, 0.0_f32, 0.0_f32], 0.0)]
+#[case(vec![0.5_f32, 0.5_f32], 1.0)]
+#[case(vec![0.5_f32, 0.5_f32, 0.0_f32, 0.0_f32], 1.0)]
+fn test_shannon_entropy(#[case] probs: Vec<f32>, #[case] expected: f32) {
+    assert_eq!(shannon_entropy(&probs), expected);
+}
+
+#[rstest]
+#[case(b"", 0.0_f32)]
+#[case(b"ATCG", 0.5_f32)]
+#[case(b"ATAT", 0.0_f32)]
+#[case(b"CGCG", 1.0_f32)]
+#[case(b"ATCT", 0.25_f32)]
+fn test_gc_content(#[case] seq: &[u8], #[case] expected: f32) {
+    assert_eq!(gc_content(seq), expected);
+}
+
+#[rstest]
+#[case(b"", b"")]
+#[case(b"A", b"T")]
+#[case(b"C", b"G")]
+#[case(b"G", b"C")]
+#[case(b"T", b"A")]
+#[case(b"AAAAA", b"TTTTT")]
+#[case(b"ATCG", b"CGAT")]
+fn test_reverse_complement(#[case] seq: &[u8], #[case] expected: &[u8]) {
+    assert_eq!(reverse_complement(seq).as_slice(), expected);
+}
+
+#[rstest]
+#[case(0, 0, 0)]
+#[case(5, 2, 3)]
+#[case(5, 10, 0)]
+fn test_usize_sub(#[case] a: usize, #[case] b: usize, #[case] expected: usize) {
+    assert_eq!(usize_sub(a, b), expected);
 }

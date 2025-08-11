@@ -17,15 +17,16 @@ Run with:<br>
 
 ## ToDo
 - [ ] Automatically extract sample name.
+- [ ] Allow providing multiple fasta files.
 - [ ] Allow reading stdin/stdout to allow piping.
 
 ## Subcommands
 🔴 Not implemented yet (but planning to).<br>
 🟡 Implemented but not tested/fully featured.<br>
-🟢 Implemented and tested!
+🟢 Beta-mode available!
 
-### fasta_rs split
-🟡 Split into one file per sequence.
+### fasta_rs `split`
+🟢 Split into one file per sequence.
 
 `fasta_rs split --fasta <sequences.fasta> <optional_args>`
 
@@ -34,8 +35,8 @@ Optional arguments:
 <b>-o/--outdir</b> [fasta_split] - Output directory.
 </pre>
 
-### fasta_rs stats
-🟡 Calculate basic stats such as num sequences, total length, gc content, etc.
+### fasta_rs `stats`
+🟢 Calculate basic stats such as num sequences, total length, gc content, etc.
 
 `fasta_rs stats --fasta <sequences.fasta> <optional_args>`
 
@@ -44,8 +45,8 @@ Optional arguments:
 <b>-o/--outfile</b> [stats.json] - Output file.
 </pre>
 
-### fasta_rs fa2tab
-🟡 Generate a .tsv file with basic information about each sequence.
+### fasta_rs `fa2tab`
+🟢 Generate a .tsv file with basic information about each sequence.
 
 `fasta_rs fa2tab --fasta <sequences.fasta> <optional_args>`
 
@@ -54,8 +55,8 @@ Optional arguments:
 <b>-o/--outfile</b> [stats.tsv] - Output file.
 </pre>
 
-### fasta_rs homopolymers
-🟡 Find homopolymers in sequences.
+### fasta_rs `homopolymers`
+🟢 Find homopolymers in sequences.
 
 `fasta_rs homopolymers --fasta <sequences.fasta> <optional_args>`
 
@@ -63,13 +64,13 @@ Optional arguments:
 <pre>
 <b>-m/--min-hp-len</b> [5] - Min homopolymer length to consider.
 
-<b>-s/--strict</b> [false] - Treat uppercase and lowercase nucleotides as different. E.g., AAAAA and aaaaa will be considered separate.
+<b>-s/--strict</b> [false] - Only consider homopolymers for {A, C, G, T, a, c, g, t}.
 
 <b>-o/--outfile</b> [homopolymers.tsv] - Output file.
 </pre>
 
-### fasta_rs filter
-🟡 Filter sequences based on certain criteria.
+### fasta_rs `filter`
+🟢 Filter sequences based on certain criteria.
 
 `fasta_rs filter --fasta <sequences.fasta> <optional_args>`
 
@@ -98,8 +99,8 @@ Optional arguments:
 <b>-o/--outfile</b> [query.fasta] - Output file.
 </pre>
 
-### fasta_rs extract
-🟡 Extract sub-sequence based on provided range.
+### fasta_rs `extract`
+🟢 Extract sub-sequence based on provided range.
 
 `fasta_rs extract --fasta <sequences.fasta> <optional_args>`
 
@@ -114,8 +115,8 @@ Optional arguments:
 
 Since the coordinates are BED-compatible, extracting the ith base would be equivalent to using `-s i-1` and `-e i`
 
-### fasta_rs sample
-🟡 (down)sample sequences based on a number or proportion.
+### fasta_rs `sample`
+🟢 (down)sample sequences based on a number or proportion.
 
 `fasta_rs sample --fasta <sequences.fasta> <optional_args>`
 
@@ -126,9 +127,8 @@ Optional arguments:
 <b>-o/--outfile</b> [sample.fasta] - Output file.
 </pre>
 
-### fasta_rs sort
-🟡 Sort sequences by a given metric.
-
+### fasta_rs `sort`
+🟢 Sort sequences by a given metric.
 
 `fasta_rs sort --fasta <sequences.fasta> <optional_args>`
 
@@ -141,9 +141,8 @@ Optional arguments:
 <b>-o/--outfile</b> [sorted.fasta] - Output file.
 </pre>
 
-### fasta_rs shuffle
-🟡 Randomly shuffle sequences.
-
+### fasta_rs `shuffle`
+🟢 Randomly shuffle sequences.
 
 `fasta_rs shuffle --fasta <sequences.fasta> <optional_args>`
 
@@ -152,8 +151,8 @@ Optional arguments:
 <b>-o/--outfile</b> [shuffled.fasta] - Output file.
 </pre>
 
-### fasta_rs head
-🟡 View the first n sequences.
+### fasta_rs `head`
+🟢 View the first n sequences.
 
 `fasta_rs head --fasta <sequences.fasta> <optional_args>`
 
@@ -162,8 +161,8 @@ Optional arguments:
 <b>-n/--num_seqs</b> [5] - Number of sequences to output.
 </pre>
 
-### fasta_rs amplicon
-🟡 In silico PCR by exact or fuzzy primer matching.
+### fasta_rs `amplicon`
+🟢 In silico PCR by exact or fuzzy primer matching.
 
 `fasta_rs amplicon --fasta <sequences.fasta> --primers <primers.tsv> --search-type {exact, fuzzy} <optional_args>`
 
@@ -181,7 +180,7 @@ The primer.tsv TAB separated file needs to specifies the following for each prim
 - Expected maximum length of insert size.
 - Num allowed mismatches (only for fuzzy search).
 
-### fasta_rs reverse
+### fasta_rs `reverse`
 🔴 Reverse complement sequences.
 
 `fasta_rs reverse --fasta <sequences.fasta> <optional_args>`
