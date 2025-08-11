@@ -1,6 +1,7 @@
 use crate::common::{AppError, get_bufwriter, needletail_fasta_reader};
 use log::{info, warn};
 use needletail::parser::SequenceRecord;
+use rstest::*;
 use std::fs::File;
 use std::io::BufWriter;
 use std::io::Write;
@@ -109,4 +110,23 @@ pub fn fasta_homopolymers(
         }
     }
     Ok(())
+}
+
+#[rstest]
+#[case(0, 5, &b'A', 5, false, true)]
+#[case(0, 1, &b'A', 5, false, false)]
+#[case(0, 10, &b'N', 5, true, false)]
+
+fn test_valid_homopolymer(
+    #[case] i: usize,
+    #[case] j: usize,
+    #[case] nt: &u8,
+    #[case] min_hp_len: usize,
+    #[case] strict: bool,
+    #[case] expected_valid: bool,
+) {
+    assert_eq!(
+        valid_homopolymer(i, j, nt, min_hp_len, strict),
+        expected_valid
+    );
 }
