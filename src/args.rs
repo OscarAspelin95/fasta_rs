@@ -53,15 +53,15 @@ pub enum SubCommand {
         #[clap(short, long)]
         fasta: Option<PathBuf>,
 
-        #[clap(short, long, default_value = "stats.json")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Fa2tab {
         #[clap(short, long)]
         fasta: Option<PathBuf>,
 
-        #[clap(short, long, default_value = "fa2tab.tsv")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Homopolymers {
         #[clap(short, long)]
@@ -73,8 +73,8 @@ pub enum SubCommand {
         #[clap(short, long)]
         strict: bool,
 
-        #[clap(short, long, default_value = "homopolymers.tsv")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Filter {
         #[clap(short, long)]
@@ -115,8 +115,8 @@ pub enum SubCommand {
         #[clap(long, default_value_t = 100.0)]
         max_entropy: f32,
 
-        #[clap(short, long, default_value = "filtered.fasta")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Extract {
         #[clap(short, long)]
@@ -128,8 +128,8 @@ pub enum SubCommand {
         #[clap(short, long, default_value_t = usize::MAX)]
         end: usize,
 
-        #[clap(short, long, default_value = "extracted.fasta")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Sample {
         #[clap(short, long)]
@@ -138,8 +138,8 @@ pub enum SubCommand {
         #[clap(short, long, default_value_t = 1.0)]
         by: f32,
 
-        #[clap(short, long, default_value = "sampled.fasta")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Sort {
         #[clap(short, long)]
@@ -151,15 +151,15 @@ pub enum SubCommand {
         #[clap(short, long)]
         reverse: bool,
 
-        #[clap(short, long, default_value = "sorted.fasta")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Shuffle {
         #[clap(short, long)]
         fasta: Option<PathBuf>,
 
-        #[clap(short, long, default_value = "shuffled.fasta")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Head {
         #[clap(short, long)]
@@ -167,6 +167,9 @@ pub enum SubCommand {
 
         #[clap(short, long, default_value_t = 5)]
         num_seqs: usize,
+
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Amplicon {
         #[clap(short, long)]
@@ -178,8 +181,8 @@ pub enum SubCommand {
         #[clap(short, long)]
         search_type: SearchType,
 
-        #[clap(short, long, default_value = "amplicons.tsv")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
     Compress {
         #[clap(short, long)]
@@ -188,7 +191,7 @@ pub enum SubCommand {
         #[clap(short, long, default_value_t = 5)]
         max_hp_len: usize,
 
-        #[clap(short, long, default_value = "compressed.fasta")]
-        outfile: PathBuf,
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
     },
 }

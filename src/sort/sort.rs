@@ -1,9 +1,8 @@
 use crate::args::SortType;
 use crate::common::utils::nucleotide_probabilities;
-use crate::common::writer::get_fasta_writer;
+use crate::common::writer::bio_fasta_writer;
 use crate::common::{AppError, bio_fasta_reader, gc_content, nucleotide_counts, shannon_entropy};
 use bio::io::fasta::Record;
-use log::info;
 use rayon::prelude::*;
 use serde::Serialize;
 use std::cmp::Ordering;
@@ -30,11 +29,10 @@ pub fn fasta_sort(
     fasta: Option<PathBuf>,
     sort_type: SortType,
     reverse: bool,
-    outfile: &PathBuf,
+    outfile: Option<PathBuf>,
 ) -> Result<(), AppError> {
     let reader = bio_fasta_reader(fasta)?;
 
-    info!("Parsing records...");
     let mut fasta_records: Vec<FastaRecord> = reader
         .records()
         .par_bridge()
@@ -65,7 +63,6 @@ pub fn fasta_sort(
 
     // TODO - move this to separate function.
     // Sorting requires cmp or partial_cmp depending on data type.
-    info!("Sorting records...");
     match sort_type {
         SortType::Length => {
             fasta_records.par_sort_by(|a, b| {
@@ -109,7 +106,7 @@ pub fn fasta_sort(
         }
     }
 
-    let mut writer = get_fasta_writer(outfile)?;
+    let mut writer = bio_fasta_writer(outfile)?;
 
     for fasta_record in fasta_records {
         writer

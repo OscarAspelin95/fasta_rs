@@ -1,9 +1,13 @@
-use crate::common::{AppError, needletail_fastx_reader};
-use log::warn;
+use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
 use std::path::PathBuf;
 
-pub fn fasta_head(fasta: Option<PathBuf>, num_seqs: usize) -> Result<(), AppError> {
+pub fn fasta_head(
+    fasta: Option<PathBuf>,
+    num_seqs: usize,
+    outfile: Option<PathBuf>,
+) -> Result<(), AppError> {
     let mut reader = needletail_fastx_reader(fasta)?;
+    let mut writer = get_bufwriter(outfile).map_err(|_| AppError::FastaWriteError)?;
 
     let mut n: usize = 0;
     while let Some(record) = reader.next() {
@@ -11,15 +15,11 @@ pub fn fasta_head(fasta: Option<PathBuf>, num_seqs: usize) -> Result<(), AppErro
             Ok(record) => {
                 n += 1;
 
-                println!(
-                    ">{}\n{}",
-                    std::str::from_utf8(record.id())
-                        .expect("Record ID has invalid UTF-8 encoding."),
-                    std::str::from_utf8(&record.seq()).expect("Record has invalid UTF-8 encoding.")
-                );
+                record
+                    .write(&mut writer, None)
+                    .map_err(|_| AppError::FastaWriteError)?
             }
-            Err(e) => {
-                warn!("{:?}", e);
+            Err(_) => {
                 continue;
             }
         };

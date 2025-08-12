@@ -1,12 +1,11 @@
 use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
-use log::warn;
 use std::{io::Write, path::PathBuf};
 
 pub fn fasta_extract(
     fasta: Option<PathBuf>,
     start: usize,
     end: usize,
-    outfile: &PathBuf,
+    outfile: Option<PathBuf>,
 ) -> Result<(), AppError> {
     let mut reader = needletail_fastx_reader(fasta)?;
 
@@ -14,7 +13,7 @@ pub fn fasta_extract(
         return Err(AppError::InvalidRangeError);
     }
 
-    let mut writer = get_bufwriter(&outfile)?;
+    let mut writer = get_bufwriter(outfile)?;
 
     while let Some(record) = reader.next() {
         match record {
@@ -22,7 +21,6 @@ pub fn fasta_extract(
                 let record_seq = record.seq();
 
                 if start >= record_seq.len() {
-                    warn!("Skipping record, too short.");
                     continue;
                 }
 
@@ -32,22 +30,29 @@ pub fn fasta_extract(
                     std::str::from_utf8(record.id()).map_err(|_| AppError::InvalidUtf8Error)?;
 
                 // Add start/end coordinates.
-                let record_id_new = format!("{}|{}-{}", record_id, start, max_end);
+                let id = format!("{}|{}-{}", record_id, start, max_end);
 
                 writer
-                    .write_all(
-                        format!(
-                            ">{}\n{}\n",
-                            record_id_new,
-                            std::str::from_utf8(&record.seq()[start..max_end])
-                                .expect("Record has invalid UTF-8 encoding.")
-                        )
-                        .as_bytes(),
-                    )
+                    .write_all(b">")
+                    .map_err(|_| AppError::FastaWriteError)?;
+
+                writer
+                    .write_all(id.as_bytes())
+                    .map_err(|_| AppError::FastaWriteError)?;
+
+                writer
+                    .write_all(b"\n")
+                    .map_err(|_| AppError::FastaWriteError)?;
+
+                writer
+                    .write_all(&record.seq()[start..max_end])
+                    .map_err(|_| AppError::FastaWriteError)?;
+
+                writer
+                    .write_all(b"\n")
                     .map_err(|_| AppError::FastaWriteError)?;
             }
-            Err(e) => {
-                warn!("{:?}", e);
+            Err(_) => {
                 continue;
             }
         };

@@ -41,6 +41,8 @@ fn validate_fastx(fastx: &PathBuf) -> Result<&PathBuf, AppError> {
     return Ok(fastx);
 }
 
+/// NOTE - not sure why this compiles and whether or not this is
+/// actually thread safe. Needs to be investigated.
 pub fn bio_fasta_reader(
     fasta: Option<PathBuf>,
 ) -> Result<Reader<BufReader<Box<dyn Read + Send>>>, AppError> {
@@ -50,12 +52,10 @@ pub fn bio_fasta_reader(
             let f = File::open(valid_fasta).map_err(|_| AppError::FastxReadError)?;
 
             let reader = Reader::new(Box::new(f) as Box<dyn Read + Send>);
-
             Ok(reader)
         }
         None => {
             let buf_reader = BufReader::new(std::io::stdin());
-
             Ok(Reader::new(Box::new(buf_reader)))
         }
     }
