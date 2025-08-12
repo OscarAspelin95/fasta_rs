@@ -1,17 +1,15 @@
 use crate::args::SearchType;
-use crate::common::{AppError, bio_fasta_reader, reverse_complement, usize_sub};
+use crate::common::{AppError, bio_fasta_reader, get_bufwriter, reverse_complement, usize_sub};
 use bio::pattern_matching::myers::MyersBuilder;
-use log::warn;
 use memchr::memmem;
 use rayon::prelude::*;
 use rstest::*;
 use std::collections::HashSet;
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
 
 use std::{
     fs::File,
-    io::{BufRead, BufReader, BufWriter, Write},
+    io::{BufRead, BufReader, Write},
 };
 
 #[derive(PartialEq, Debug)]
@@ -80,11 +78,11 @@ pub fn parse_primer_file<'a>(primer_file: &'a PathBuf) -> Result<Vec<PrimerPair>
 
     let mut primer_pairs: Vec<PrimerPair> = Vec::new();
 
-    for (i, line) in reader.lines().enumerate() {
+    for (_, line) in reader.lines().enumerate() {
         if let Ok(primer_line) = line {
             match extract_primer_info(&primer_line) {
                 Ok(primer_pair) => primer_pairs.push(primer_pair),
-                Err(e) => warn!("{}, line: {} `{}`", e, i, primer_line),
+                Err(_) => continue,
             }
         }
     }
@@ -93,25 +91,6 @@ pub fn parse_primer_file<'a>(primer_file: &'a PathBuf) -> Result<Vec<PrimerPair>
         0 => Err(AppError::NoPrimersFoundError),
         _ => Ok(primer_pairs),
     }
-}
-fn write_header(writer: &Arc<Mutex<BufWriter<File>>>) {
-    writer
-        .lock()
-        .unwrap()
-        .write_all(
-            format!(
-                "{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
-                "sequence_id",
-                "primer_name",
-                "start",
-                "end",
-                "insert_length",
-                "actual_length",
-                "amplicon"
-            )
-            .as_bytes(),
-        )
-        .unwrap();
 }
 
 fn myers_builder(primer_seq: &[u8]) -> bio::pattern_matching::myers::Myers {
@@ -146,10 +125,7 @@ pub fn amplicon_fuzzy_search<'a>(
 
     let num_mismatch = match num_mismatch {
         Some(num_mismatch) => *num_mismatch as u8,
-        None => {
-            warn!("Num mismatches not set, using 1.");
-            1_u8
-        }
+        None => 1_u8,
     };
 
     let forward_len = forward_primer.len();
@@ -267,58 +243,73 @@ pub fn fasta_amplicon(
     fasta: Option<PathBuf>,
     primers: &PathBuf,
     search_type: &SearchType,
-    outfile: &PathBuf,
+    outfile: Option<PathBuf>,
 ) -> Result<(), AppError> {
     // Read and parse primer file.
     let primer_pairs = parse_primer_file(primers)?;
 
     let reader = bio_fasta_reader(fasta)?;
 
-    // Initialize writer to which we write results.
-    let writer = Arc::new(Mutex::new(BufWriter::new(
-        File::create(outfile).expect("Failed to create output file."),
-    )));
+    let mut writer = get_bufwriter(outfile).map_err(|_| AppError::FastaWriteError)?;
 
-    // Write tsv header.
-    write_header(&writer);
+    writer
+        .write_all(
+            format!(
+                "{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
+                "sequence_id",
+                "primer_name",
+                "start",
+                "end",
+                "insert_length",
+                "actual_length",
+                "amplicon"
+            )
+            .as_bytes(),
+        )
+        .map_err(|_| AppError::FastaWriteError)?;
 
     let search_function = match search_type {
         SearchType::Exact => amplicon_exact_search,
         SearchType::Fuzzy => amplicon_fuzzy_search,
     };
 
-    reader.records().par_bridge().for_each(|record| {
-        if let Ok(record) = record {
-            for primer_pair in &primer_pairs {
-                let amplicons = search_function(&record.seq(), primer_pair);
+    let amplicon_results: Vec<Vec<String>> = reader
+        .records()
+        .par_bridge()
+        .filter_map(|record| {
+            if let Ok(record) = record {
+                for primer_pair in &primer_pairs {
+                    let amplicons = search_function(&record.seq(), primer_pair);
 
-                let result_vec: Vec<String> = amplicons
-                    .iter()
-                    .map(|amplicon| {
-                        format!(
-                            "{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
-                            record.id(),
-                            primer_pair.primer_name,
-                            amplicon.start,
-                            amplicon.end,
-                            amplicon.insert_length,
-                            amplicon.total_length,
-                            std::str::from_utf8(amplicon.amplicon).unwrap()
-                        )
-                    })
-                    .collect();
+                    let result_vec: Vec<String> = amplicons
+                        .iter()
+                        .map(|amplicon| {
+                            format!(
+                                "{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
+                                record.id(),
+                                primer_pair.primer_name,
+                                amplicon.start,
+                                amplicon.end,
+                                amplicon.insert_length,
+                                amplicon.total_length,
+                                std::str::from_utf8(amplicon.amplicon).unwrap()
+                            )
+                        })
+                        .collect();
 
-                // Is is probably not ideal to write results after each primer pair.
-                // A better approach would be to write after each record.
-                if result_vec.len() > 0 {
-                    writer
-                        .lock()
-                        .unwrap()
-                        .write_all(result_vec.concat().as_bytes())
-                        .unwrap();
+                    return Some(result_vec);
                 }
             }
-        }
+
+            return None;
+        })
+        .collect();
+
+    amplicon_results.iter().flatten().for_each(|r| {
+        writer
+            .write_all(r.as_bytes())
+            .map_err(|_| AppError::FastaWriteError)
+            .expect("Failed to write.");
     });
 
     Ok(())

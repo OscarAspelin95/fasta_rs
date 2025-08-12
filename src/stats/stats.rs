@@ -13,7 +13,7 @@ struct FastaStats {
     max_len: usize,
 }
 
-pub fn fasta_stats(fasta: Option<PathBuf>, outfile: &PathBuf) -> Result<(), AppError> {
+pub fn fasta_stats(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<(), AppError> {
     let mut reader = needletail_fastx_reader(fasta)?;
 
     let mut num_seqs = 0;
@@ -44,7 +44,7 @@ pub fn fasta_stats(fasta: Option<PathBuf>, outfile: &PathBuf) -> Result<(), AppE
         max_len: max_len,
     };
 
-    write_json(outfile, fasta_stats);
+    write_json(outfile, fasta_stats)?;
 
     Ok(())
 }

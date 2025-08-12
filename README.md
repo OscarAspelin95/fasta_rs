@@ -20,6 +20,7 @@ Reads from stdin if no file is provided.
 - [ ] Automatically extract sample name.
 - [ ] Allow providing multiple fasta files.
 - [ ] Allow reading stdin/stdout to allow piping.
+- [ ] Consider chaining to needletails record.write().
 - [ ] More efficient fasta bufwrite without String allocation (use macro or inline function?).
 - [ ] Fix order of args, dispatch and imports.
 
@@ -202,4 +203,14 @@ Optional arguments:
 <pre>
 <b>-m/--max-hp-len</b> [5] - Compress down to homopolymers of max provided length. E.g., ATCGGGGGGG with -m 3 outputs ATCGGG.
 <b>-o/--outfile</b> [hp_compressed.fasta] - Output file.
+</pre>
+
+### fasta_rs `fq2fa`
+🔴 Convert FASTQ to FASTA format.
+
+`fasta_rs fq2fa --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>-o/--outfile</b> [fa.fasta] - Output file.
 </pre>

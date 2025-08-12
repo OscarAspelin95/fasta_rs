@@ -2,28 +2,43 @@ use crate::common::AppError;
 use bio::io::fasta::Writer;
 use serde::Serialize;
 use serde_json;
+use std::io::Write;
 use std::path::PathBuf;
 use std::{fs::File, io::BufWriter};
 
-pub fn write_json<T: Serialize>(outfile: &PathBuf, s: T) {
-    let outbuf = File::create(outfile).unwrap();
-    let writer = BufWriter::new(outbuf);
-
+pub fn write_json<T: Serialize>(outfile: Option<PathBuf>, s: T) -> Result<(), AppError> {
+    let writer = get_bufwriter(outfile).map_err(|_| AppError::FastaWriteError)?;
     serde_json::to_writer(writer, &s).unwrap();
+
+    Ok(())
 }
 
-pub fn get_bufwriter(outfile: &PathBuf) -> Result<BufWriter<File>, AppError> {
-    let writer = File::create(outfile).map_err(|_| AppError::FastxReadError)?;
-    let bufwriter = BufWriter::new(writer);
+pub fn get_bufwriter(outfile: Option<PathBuf>) -> Result<Box<dyn Write>, AppError> {
+    match outfile {
+        Some(outfile) => {
+            let f = File::create(outfile).map_err(|_| AppError::FastxReadError)?;
+            let writer = BufWriter::new(f);
 
-    return Ok(bufwriter);
+            Ok(Box::new(writer))
+        }
+        None => {
+            let writer = BufWriter::new(std::io::stdout());
+            Ok(Box::new(writer))
+        }
+    }
 }
 
-// We might need BufWriter here...
-pub fn get_fasta_writer(outfile: &PathBuf) -> Result<Writer<BufWriter<File>>, AppError> {
-    let writer = Writer::new(BufWriter::new(
-        File::create(outfile).map_err(|_| AppError::FastxReadError)?,
-    ));
-
-    return Ok(writer);
+/// Meant for writing bio::io::Fasta::Record.
+pub fn bio_fasta_writer(outfile: Option<PathBuf>) -> Result<Writer<Box<dyn Write>>, AppError> {
+    match outfile {
+        Some(outfile) => {
+            let f = File::create(outfile).map_err(|_| AppError::FastxReadError)?;
+            let writer = Writer::new(Box::new(BufWriter::new(f)) as Box<dyn Write>);
+            return Ok(writer);
+        }
+        None => {
+            let writer = Writer::new(Box::new(BufWriter::new(std::io::stdout())) as Box<dyn Write>);
+            return Ok(writer);
+        }
+    }
 }

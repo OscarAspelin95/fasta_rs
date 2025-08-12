@@ -1,17 +1,19 @@
 use crate::common::AppError;
 use crate::common::reader::bio_fasta_reader;
-use crate::common::writer::get_fasta_writer;
+use crate::common::writer::bio_fasta_writer;
 use bio::io::fasta::Record;
-use log::info;
 use rand::{prelude::*, rng};
 use std::path::PathBuf;
 
-pub fn fasta_sample(fasta: Option<PathBuf>, by: f32, outfile: &PathBuf) -> Result<(), AppError> {
+pub fn fasta_sample(
+    fasta: Option<PathBuf>,
+    by: f32,
+    outfile: Option<PathBuf>,
+) -> Result<(), AppError> {
     let reader = bio_fasta_reader(fasta)?;
 
-    let mut writer = get_fasta_writer(&outfile)?;
+    let mut writer = bio_fasta_writer(outfile)?;
 
-    info!("Parsing records...");
     let mut fasta_records: Vec<Record> = Vec::new();
 
     reader.records().for_each(|record| match record {
@@ -32,10 +34,8 @@ pub fn fasta_sample(fasta: Option<PathBuf>, by: f32, outfile: &PathBuf) -> Resul
     // Check if we should downsample by num or fraction.
     if by <= 1.0 {
         sample_by = (by * fasta_records.len() as f32) as usize;
-        info!("Sampling {} reads by proportion...", sample_by);
     } else {
         sample_by = by as usize;
-        info!("Sampling {} reads by number...", sample_by);
     }
 
     let mut rng = rng();

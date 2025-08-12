@@ -1,5 +1,4 @@
 use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
-use log::{info, warn};
 use rstest::*;
 
 use std::{io::Write, path::PathBuf};
@@ -28,33 +27,42 @@ fn homopolymer_compression(seq: &[u8], max_hp_len: usize) -> Vec<u8> {
 pub fn fasta_compress(
     fasta: Option<PathBuf>,
     max_hp_len: usize,
-    outfile: &PathBuf,
+    outfile: Option<PathBuf>,
 ) -> Result<(), AppError> {
     assert!(max_hp_len > 0, "value of max_hp_len must be > 0.");
 
     let mut reader = needletail_fastx_reader(fasta)?;
 
     // Output file writer.
-    let mut bufwriter = get_bufwriter(outfile)?;
+    let mut writer = get_bufwriter(outfile)?;
 
-    info!("Finding homopolymers...");
     while let Some(record) = reader.next() {
         match record {
             Ok(record) => {
                 let compressed_sequence = homopolymer_compression(&record.seq(), max_hp_len);
 
-                let s: String = format!(
-                    ">{}\n{}\n",
-                    std::str::from_utf8(record.id()).map_err(|_| AppError::InvalidUtf8Error)?,
-                    std::str::from_utf8(&compressed_sequence[..])
-                        .map_err(|_| AppError::InvalidUtf8Error)?
-                );
-                bufwriter
-                    .write_all(s.as_bytes())
-                    .map_err(|_| AppError::FastaWriteError)?
+                let id =
+                    std::str::from_utf8(record.id()).map_err(|_| AppError::InvalidUtf8Error)?;
+
+                // Write sequence.
+                writer
+                    .write_all(b">")
+                    .map_err(|_| AppError::FastaWriteError)?;
+                writer
+                    .write_all(id.as_bytes())
+                    .map_err(|_| AppError::FastaWriteError)?;
+                writer
+                    .write_all(b"\n")
+                    .map_err(|_| AppError::FastaWriteError)?;
+                writer
+                    .write_all(&compressed_sequence)
+                    .map_err(|_| AppError::FastaWriteError)?;
+                writer
+                    .write_all(b"\n")
+                    .map_err(|_| AppError::FastaWriteError)?;
             }
-            Err(e) => {
-                warn!("Failed to parse record: {:?}", e);
+            Err(_) => {
+                continue;
             }
         }
     }
