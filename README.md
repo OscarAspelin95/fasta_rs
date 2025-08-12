@@ -1,5 +1,5 @@
 # fasta_rs
-🚧 Work in progress fasta toolkit, aiming to be light version of [seqkit](https://github.com/shenwei356/seqkit/).
+🚧 Work in progress fasta toolkit, aiming to an alternative to [seqkit](https://github.com/shenwei356/seqkit/).
 
 ## Requirements
 - Linux OS (Ubuntu 24.04.2)
@@ -14,6 +14,10 @@ The generated binary is available in `target/release/fasta_rs`.
 ## Usage
 Run with:<br>
 `fasta_rs <subcommand> <args>`<br>
+
+## Example
+The following command will randomly sample 50% of the sequences, filter by gc content and finally convert to a .tsv file.<br>
+`fasta_rs sample -b 0.5 < file.fasta | fasta_rs filter --min-gc 0.5 | fasta_rs fa2tab > out.tsv`
 
 ## ToDo
 - [ ] Automatically extract sample name.
@@ -189,6 +193,7 @@ The primer.tsv TAB separated file needs to specifies the following for each prim
 Optional arguments:
 <pre>
 <b>-m/--max-hp-len</b> [5] - Compress down to homopolymers of max provided length. E.g., ATCGGGGGGG with -m 3 outputs ATCGGG.
+
 <b>-o/--outfile</b> [hp_compressed.fasta] - Output file.
 </pre>
 
