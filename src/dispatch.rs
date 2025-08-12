@@ -1,6 +1,7 @@
 use crate::args::{App, SubCommand};
 
 use crate::amplicon::fasta_amplicon;
+use crate::compress::fasta_compress;
 use crate::extract::fasta_extract;
 use crate::fa2tab::fasta_fa2tab;
 use crate::filter::fasta_filter;
@@ -72,5 +73,10 @@ pub fn dispatch(args: App) {
             search_type,
             outfile,
         } => fasta_amplicon(&fasta, &primers, &search_type, &outfile).unwrap(),
+        SubCommand::Compress {
+            fasta,
+            max_hp_len,
+            outfile,
+        } => fasta_compress(&fasta, max_hp_len, &outfile).unwrap(),
     };
 }
