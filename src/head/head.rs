@@ -1,9 +1,9 @@
-use crate::common::{AppError, needletail_fasta_reader};
+use crate::common::{AppError, needletail_fastx_reader};
 use log::warn;
 use std::path::PathBuf;
 
-pub fn fasta_head(fasta: &PathBuf, num_seqs: usize) -> Result<(), AppError> {
-    let mut reader = needletail_fasta_reader(fasta)?;
+pub fn fasta_head(fasta: Option<PathBuf>, num_seqs: usize) -> Result<(), AppError> {
+    let mut reader = needletail_fastx_reader(fasta)?;
 
     let mut n: usize = 0;
     while let Some(record) = reader.next() {

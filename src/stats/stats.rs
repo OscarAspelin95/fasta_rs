@@ -1,5 +1,5 @@
 use crate::common::write_json;
-use crate::common::{AppError, needletail_fasta_reader};
+use crate::common::{AppError, needletail_fastx_reader};
 use serde::Serialize;
 use std::path::PathBuf;
 use std::usize;
@@ -13,8 +13,8 @@ struct FastaStats {
     max_len: usize,
 }
 
-pub fn fasta_stats(fasta: &PathBuf, outfile: &PathBuf) -> Result<(), AppError> {
-    let mut reader = needletail_fasta_reader(fasta)?;
+pub fn fasta_stats(fasta: Option<PathBuf>, outfile: &PathBuf) -> Result<(), AppError> {
+    let mut reader = needletail_fastx_reader(fasta)?;
 
     let mut num_seqs = 0;
     let mut num_bases = 0;

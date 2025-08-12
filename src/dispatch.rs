@@ -15,23 +15,23 @@ use crate::stats::fasta_stats;
 
 pub fn dispatch(args: App) {
     match args.command {
-        SubCommand::Split { fasta, outdir } => fasta_split(&fasta, &outdir).unwrap(),
-        SubCommand::Stats { fasta, outfile } => fasta_stats(&fasta, &outfile).unwrap(),
-        SubCommand::Fa2tab { fasta, outfile } => fasta_fa2tab(&fasta, &outfile).unwrap(),
-        SubCommand::Head { fasta, num_seqs } => fasta_head(&fasta, num_seqs).unwrap(),
+        SubCommand::Split { fasta, outdir } => fasta_split(fasta, &outdir).unwrap(),
+        SubCommand::Stats { fasta, outfile } => fasta_stats(fasta, &outfile).unwrap(),
+        SubCommand::Fa2tab { fasta, outfile } => fasta_fa2tab(fasta, &outfile).unwrap(),
+        SubCommand::Head { fasta, num_seqs } => fasta_head(fasta, num_seqs).unwrap(),
         SubCommand::Homopolymers {
             fasta,
             min_hp_len,
             strict,
             outfile,
-        } => fasta_homopolymers(&fasta, min_hp_len, strict, &outfile).unwrap(),
+        } => fasta_homopolymers(fasta, min_hp_len, strict, &outfile).unwrap(),
         SubCommand::Sort {
             fasta,
             by,
             reverse,
             outfile,
-        } => fasta_sort(&fasta, by, reverse, &outfile).unwrap(),
-        SubCommand::Shuffle { fasta, outfile } => fasta_shuffle(&fasta, &outfile).unwrap(),
+        } => fasta_sort(fasta, by, reverse, &outfile).unwrap(),
+        SubCommand::Shuffle { fasta, outfile } => fasta_shuffle(fasta, &outfile).unwrap(),
         SubCommand::Filter {
             fasta,
             min_len,
@@ -46,7 +46,7 @@ pub fn dispatch(args: App) {
             max_entropy,
             outfile,
         } => fasta_filter(
-            &fasta,
+            fasta,
             min_len,
             max_len,
             min_gc,
@@ -65,18 +65,18 @@ pub fn dispatch(args: App) {
             start,
             end,
             outfile,
-        } => fasta_extract(&fasta, start, end, &outfile).unwrap(),
-        SubCommand::Sample { fasta, by, outfile } => fasta_sample(&fasta, by, &outfile).unwrap(),
+        } => fasta_extract(fasta, start, end, &outfile).unwrap(),
+        SubCommand::Sample { fasta, by, outfile } => fasta_sample(fasta, by, &outfile).unwrap(),
         SubCommand::Amplicon {
             fasta,
             primers,
             search_type,
             outfile,
-        } => fasta_amplicon(&fasta, &primers, &search_type, &outfile).unwrap(),
+        } => fasta_amplicon(fasta, &primers, &search_type, &outfile).unwrap(),
         SubCommand::Compress {
             fasta,
             max_hp_len,
             outfile,
-        } => fasta_compress(&fasta, max_hp_len, &outfile).unwrap(),
+        } => fasta_compress(fasta, max_hp_len, &outfile).unwrap(),
     };
 }

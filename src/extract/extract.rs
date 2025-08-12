@@ -1,14 +1,14 @@
-use crate::common::{AppError, get_bufwriter, needletail_fasta_reader};
+use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
 use log::warn;
 use std::{io::Write, path::PathBuf};
 
 pub fn fasta_extract(
-    fasta: &PathBuf,
+    fasta: Option<PathBuf>,
     start: usize,
     end: usize,
     outfile: &PathBuf,
 ) -> Result<(), AppError> {
-    let mut reader = needletail_fasta_reader(fasta)?;
+    let mut reader = needletail_fastx_reader(fasta)?;
 
     if start >= end {
         return Err(AppError::InvalidRangeError);

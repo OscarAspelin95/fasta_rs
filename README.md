@@ -13,7 +13,8 @@ The generated binary is available in `target/release/fasta_rs`.
 
 ## Usage
 Run with:<br>
-`fasta_rs <subcommand> <args>`
+`fasta_rs <subcommand> <args>`<br>
+Reads from stdin if no file is provided.
 
 ## ToDo
 - [ ] Automatically extract sample name.
@@ -98,7 +99,7 @@ Optional arguments:
 
 <b>--max-entropy</b> [100.0] - Maximum Shannon Entropy.
 
-<b>-o/--outfile</b> [query.fasta] - Output file.
+<b>-o/--outfile</b> [filtered.fasta] - Output file.
 </pre>
 
 ### fasta_rs `extract`
@@ -112,7 +113,7 @@ Optional arguments:
 
 <b>-e/--end</b> [u64::MAX] - End coordinate (BED offset).
 
-<b>-o/--outfile</b> [query.fasta] - Output file.
+<b>-o/--outfile</b> [extracted.fasta] - Output file.
 </pre>
 
 Since the coordinates are BED-compatible, extracting the ith base would be equivalent to using `-s i-1` and `-e i`
@@ -126,7 +127,7 @@ Optional arguments:
 <pre>
 <b>-b/--by</b> [1.0] - Num/fraction seqs to keep.
 
-<b>-o/--outfile</b> [sample.fasta] - Output file.
+<b>-o/--outfile</b> [sampled.fasta] - Output file.
 </pre>
 
 ### fasta_rs `sort`
@@ -140,7 +141,7 @@ Optional arguments:
 
 <b>-r/--reverse</b> [false] - Sort in descending order.
 
-<b>-o/--outfile</b> [sorted.fasta] - Output file.
+<b>-o/--outfile</b> [sorteded.fasta] - Output file.
 </pre>
 
 ### fasta_rs `shuffle`

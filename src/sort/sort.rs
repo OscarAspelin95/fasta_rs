@@ -27,7 +27,7 @@ fn ascending_or_descending<T: PartialOrd>(ordering: Ordering, reverse: bool) -> 
 }
 
 pub fn fasta_sort(
-    fasta: &PathBuf,
+    fasta: Option<PathBuf>,
     sort_type: SortType,
     reverse: bool,
     outfile: &PathBuf,
