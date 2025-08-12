@@ -181,4 +181,14 @@ pub enum SubCommand {
         #[clap(short, long, default_value = "amplicons.tsv")]
         outfile: PathBuf,
     },
+    Compress {
+        #[clap(short, long)]
+        fasta: PathBuf,
+
+        #[clap(short, long, default_value_t = 5)]
+        max_hp_len: usize,
+
+        #[clap(short, long, default_value = "hp_compressed.fasta")]
+        outfile: PathBuf,
+    },
 }

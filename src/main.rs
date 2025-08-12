@@ -3,6 +3,7 @@ use simple_logger::SimpleLogger;
 
 mod amplicon;
 mod common;
+mod compress;
 mod extract;
 mod fa2tab;
 mod filter;

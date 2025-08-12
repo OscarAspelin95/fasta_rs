@@ -19,6 +19,8 @@ Run with:<br>
 - [ ] Automatically extract sample name.
 - [ ] Allow providing multiple fasta files.
 - [ ] Allow reading stdin/stdout to allow piping.
+- [ ] More efficient fasta bufwrite without String allocation (use macro or inline function?).
+- [ ] Fix order of args, dispatch and imports.
 
 ## Subcommands
 🔴 Not implemented yet (but planning to).<br>
@@ -188,4 +190,15 @@ The primer.tsv TAB separated file needs to specifies the following for each prim
 Optional arguments:
 <pre>
 <b>-o/--outfile</b> [reverse.fasta] - Output file.
+</pre>
+
+### fasta_rs `compress`
+🟢 Homopolymer compression of sequences.
+
+`fasta_rs compress --fasta <sequences.fasta> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>-m/--max-hp-len</b> [5] - Compress down to homopolymers of max provided length. E.g., ATCGGGGGGG with -m 3 outputs ATCGGG.
+<b>-o/--outfile</b> [hp_compressed.fasta] - Output file.
 </pre>
