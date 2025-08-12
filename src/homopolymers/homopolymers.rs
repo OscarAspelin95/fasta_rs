@@ -44,7 +44,7 @@ pub fn find_homopolymers_in_record(
 
     // Skip sequence if shorter than hp len.
     if seq_len < min_hp_len {
-        return Err(AppError::FastaWriteError);
+        return Ok(());
     }
 
     let mut i = 0;

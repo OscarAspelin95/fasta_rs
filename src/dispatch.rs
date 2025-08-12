@@ -7,6 +7,7 @@ use crate::fa2tab::fasta_fa2tab;
 use crate::filter::fasta_filter;
 use crate::head::fasta_head;
 use crate::homopolymers::fasta_homopolymers;
+use crate::reverse::fasta_reverse;
 use crate::sample::fasta_sample;
 use crate::shuffle::fasta_shuffle;
 use crate::sort::fasta_sort;
@@ -82,5 +83,6 @@ pub fn dispatch(args: App) {
             max_hp_len,
             outfile,
         } => fasta_compress(fasta, max_hp_len, outfile).unwrap(),
+        SubCommand::Reverse { fasta, outfile } => fasta_reverse(fasta, outfile).unwrap(),
     };
 }
