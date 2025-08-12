@@ -194,4 +194,11 @@ pub enum SubCommand {
         #[clap(short, long)]
         outfile: Option<PathBuf>,
     },
+    Reverse {
+        #[clap(short, long)]
+        fasta: Option<PathBuf>,
+
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
+    },
 }

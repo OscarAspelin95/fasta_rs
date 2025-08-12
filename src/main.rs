@@ -4,18 +4,19 @@ use simple_logger::SimpleLogger;
 mod amplicon;
 mod common;
 mod compress;
+mod dispatch;
 mod extract;
 mod fa2tab;
 mod filter;
 mod head;
 mod homopolymers;
+mod reverse;
 mod sample;
 mod shuffle;
 mod sort;
 mod split;
 mod stats;
 
-mod dispatch;
 use dispatch::dispatch;
 
 mod args;

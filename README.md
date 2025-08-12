@@ -14,14 +14,11 @@ The generated binary is available in `target/release/fasta_rs`.
 ## Usage
 Run with:<br>
 `fasta_rs <subcommand> <args>`<br>
-Reads from stdin if no file is provided.
 
 ## ToDo
 - [ ] Automatically extract sample name.
-- [ ] Allow providing multiple fasta files.
 - [ ] Allow reading stdin/stdout to allow piping.
-- [ ] Consider chaining to needletails record.write().
-- [ ] More efficient fasta bufwrite without String allocation (use macro or inline function?).
+- [ ] Improve readability for writer.
 - [ ] Fix order of args, dispatch and imports.
 
 ## Subcommands
@@ -40,7 +37,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `stats`
-🟢 Calculate basic stats such as num sequences, total length, gc content, etc.
+🟢 Calculate basic stats.
 
 `fasta_rs stats --fasta <sequences.fasta> <optional_args>`
 
@@ -184,18 +181,8 @@ The primer.tsv TAB separated file needs to specifies the following for each prim
 - Expected maximum length of insert size.
 - Num allowed mismatches (only for fuzzy search).
 
-### fasta_rs `reverse`
-🔴 Reverse complement sequences.
-
-`fasta_rs reverse --fasta <sequences.fasta> <optional_args>`
-
-Optional arguments:
-<pre>
-<b>-o/--outfile</b> [reverse.fasta] - Output file.
-</pre>
-
 ### fasta_rs `compress`
-🟢 Homopolymer compression of sequences.
+🟢 Homopolymer compress sequences.
 
 `fasta_rs compress --fasta <sequences.fasta> <optional_args>`
 
@@ -205,12 +192,12 @@ Optional arguments:
 <b>-o/--outfile</b> [hp_compressed.fasta] - Output file.
 </pre>
 
-### fasta_rs `fq2fa`
-🔴 Convert FASTQ to FASTA format.
+### fasta_rs `reverse`
+🟢 Reverse complement sequences.
 
-`fasta_rs fq2fa --fasta <sequences.fasta> <optional_args>`
+`fasta_rs reverse --fasta <sequences.fasta> <optional_args>`
 
 Optional arguments:
 <pre>
-<b>-o/--outfile</b> [fa.fasta] - Output file.
+<b>-o/--outfile</b> [reverse.fasta] - Output file.
 </pre>
