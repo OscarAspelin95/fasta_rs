@@ -1,4 +1,4 @@
-use crate::common::{AppError, get_bufwriter, needletail_fasta_reader};
+use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
 use log::{info, warn};
 use rstest::*;
 
@@ -26,13 +26,13 @@ fn homopolymer_compression(seq: &[u8], max_hp_len: usize) -> Vec<u8> {
 }
 
 pub fn fasta_compress(
-    fasta: &PathBuf,
+    fasta: Option<PathBuf>,
     max_hp_len: usize,
     outfile: &PathBuf,
 ) -> Result<(), AppError> {
     assert!(max_hp_len > 0, "value of max_hp_len must be > 0.");
 
-    let mut reader = needletail_fasta_reader(fasta)?;
+    let mut reader = needletail_fastx_reader(fasta)?;
 
     // Output file writer.
     let mut bufwriter = get_bufwriter(outfile)?;

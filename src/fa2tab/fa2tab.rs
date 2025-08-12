@@ -1,8 +1,8 @@
-use crate::common::{AppError, gc_content, get_bufwriter, needletail_fasta_reader};
+use crate::common::{AppError, gc_content, get_bufwriter, needletail_fastx_reader};
 use std::{io::Write, path::PathBuf};
 
-pub fn fasta_fa2tab(fasta: &PathBuf, outfile: &PathBuf) -> Result<(), AppError> {
-    let mut reader = needletail_fasta_reader(fasta)?;
+pub fn fasta_fa2tab(fasta: Option<PathBuf>, outfile: &PathBuf) -> Result<(), AppError> {
+    let mut reader = needletail_fastx_reader(fasta)?;
 
     let mut bufwriter = get_bufwriter(outfile)?;
 

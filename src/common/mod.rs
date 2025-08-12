@@ -1,5 +1,5 @@
 pub mod reader;
-pub use reader::{bio_fasta_reader, needletail_fasta_reader};
+pub use reader::{bio_fasta_reader, needletail_fastx_reader};
 
 pub mod errors;
 pub use errors::AppError;

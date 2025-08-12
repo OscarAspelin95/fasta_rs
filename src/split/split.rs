@@ -1,9 +1,9 @@
-use crate::common::{AppError, needletail_fasta_reader};
+use crate::common::{AppError, needletail_fastx_reader};
 use std::fs::{create_dir_all, write};
 use std::path::PathBuf;
 
-pub fn fasta_split(fasta: &PathBuf, outdir: &PathBuf) -> Result<(), AppError> {
-    let mut reader = needletail_fasta_reader(fasta)?;
+pub fn fasta_split(fasta: Option<PathBuf>, outdir: &PathBuf) -> Result<(), AppError> {
+    let mut reader = needletail_fastx_reader(fasta)?;
 
     create_dir_all(outdir).map_err(|_| AppError::FailedToCreateDirError)?;
 

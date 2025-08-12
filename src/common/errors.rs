@@ -12,7 +12,7 @@ pub enum AppError {
     FileDoesNotExistError,
 
     #[error("Failed to read fasta file")]
-    FastaReadError,
+    FastxReadError,
 
     #[error("Failed to write to fasta file")]
     FastaWriteError,

@@ -6,7 +6,7 @@ use log::info;
 use rand::{prelude::*, rng};
 use std::path::PathBuf;
 
-pub fn fasta_sample(fasta: &PathBuf, by: f32, outfile: &PathBuf) -> Result<(), AppError> {
+pub fn fasta_sample(fasta: Option<PathBuf>, by: f32, outfile: &PathBuf) -> Result<(), AppError> {
     let reader = bio_fasta_reader(fasta)?;
 
     let mut writer = get_fasta_writer(&outfile)?;

@@ -1,12 +1,12 @@
+use crate::common::AppError;
 use crate::common::reader::bio_fasta_reader;
 use crate::common::writer::get_fasta_writer;
-use crate::common::AppError;
 use bio::io::fasta::Record;
 use log::info;
 use rand::{prelude::*, rng};
 use std::path::PathBuf;
 
-pub fn fasta_shuffle(fasta: &PathBuf, outfile: &PathBuf) -> Result<(), AppError> {
+pub fn fasta_shuffle(fasta: Option<PathBuf>, outfile: &PathBuf) -> Result<(), AppError> {
     let reader = bio_fasta_reader(fasta)?;
 
     let mut writer = get_fasta_writer(&outfile)?;

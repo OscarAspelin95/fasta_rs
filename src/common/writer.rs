@@ -13,7 +13,7 @@ pub fn write_json<T: Serialize>(outfile: &PathBuf, s: T) {
 }
 
 pub fn get_bufwriter(outfile: &PathBuf) -> Result<BufWriter<File>, AppError> {
-    let writer = File::create(outfile).map_err(|_| AppError::FastaReadError)?;
+    let writer = File::create(outfile).map_err(|_| AppError::FastxReadError)?;
     let bufwriter = BufWriter::new(writer);
 
     return Ok(bufwriter);
@@ -22,7 +22,7 @@ pub fn get_bufwriter(outfile: &PathBuf) -> Result<BufWriter<File>, AppError> {
 // We might need BufWriter here...
 pub fn get_fasta_writer(outfile: &PathBuf) -> Result<Writer<BufWriter<File>>, AppError> {
     let writer = Writer::new(BufWriter::new(
-        File::create(outfile).map_err(|_| AppError::FastaReadError)?,
+        File::create(outfile).map_err(|_| AppError::FastxReadError)?,
     ));
 
     return Ok(writer);

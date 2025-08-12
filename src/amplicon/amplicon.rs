@@ -264,7 +264,7 @@ pub fn amplicon_exact_search<'a>(
 }
 
 pub fn fasta_amplicon(
-    fasta: &PathBuf,
+    fasta: Option<PathBuf>,
     primers: &PathBuf,
     search_type: &SearchType,
     outfile: &PathBuf,
