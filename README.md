@@ -47,7 +47,7 @@ Optional arguments:
 
 Optional arguments:
 <pre>
-<b>-o/--outfile</b> [stats.json] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 ### fasta_rs `fa2tab`
@@ -57,7 +57,7 @@ Optional arguments:
 
 Optional arguments:
 <pre>
-<b>-o/--outfile</b> [stats.tsv] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 ### fasta_rs `homopolymers`
@@ -71,7 +71,7 @@ Optional arguments:
 
 <b>-s/--strict</b> [false] - Only consider homopolymers for {A, C, G, T, a, c, g, t}.
 
-<b>-o/--outfile</b> [homopolymers.tsv] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 ### fasta_rs `filter`
@@ -101,7 +101,7 @@ Optional arguments:
 
 <b>--max-entropy</b> [100.0] - Maximum Shannon Entropy.
 
-<b>-o/--outfile</b> [filtered.fasta] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 ### fasta_rs `extract`
@@ -115,7 +115,7 @@ Optional arguments:
 
 <b>-e/--end</b> [u64::MAX] - End coordinate (BED offset).
 
-<b>-o/--outfile</b> [extracted.fasta] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 Since the coordinates are BED-compatible, extracting the ith base would be equivalent to using `-s i-1` and `-e i`
@@ -129,7 +129,7 @@ Optional arguments:
 <pre>
 <b>-b/--by</b> [1.0] - Num/fraction seqs to keep.
 
-<b>-o/--outfile</b> [sampled.fasta] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 ### fasta_rs `sort`
@@ -143,7 +143,7 @@ Optional arguments:
 
 <b>-r/--reverse</b> [false] - Sort in descending order.
 
-<b>-o/--outfile</b> [sorteded.fasta] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 ### fasta_rs `shuffle`
@@ -153,7 +153,7 @@ Optional arguments:
 
 Optional arguments:
 <pre>
-<b>-o/--outfile</b> [shuffled.fasta] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 ### fasta_rs `head`
@@ -173,7 +173,7 @@ Optional arguments:
 
 Optional arguments:
 <pre>
-<b>-o/--outfile</b> [amplicons.tsv] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 #### primer file
@@ -194,7 +194,7 @@ Optional arguments:
 <pre>
 <b>-m/--max-hp-len</b> [5] - Compress down to homopolymers of max provided length. E.g., ATCGGGGGGG with -m 3 outputs ATCGGG.
 
-<b>-o/--outfile</b> [hp_compressed.fasta] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
 
 ### fasta_rs `reverse`
@@ -204,5 +204,5 @@ Optional arguments:
 
 Optional arguments:
 <pre>
-<b>-o/--outfile</b> [reverse.fasta] - Output file.
+<b>-o/--outfile</b> [stdout] - Output file.
 </pre>
