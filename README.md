@@ -20,10 +20,8 @@ The following command will randomly sample 50% of the sequences, filter by gc co
 `fasta_rs sample -b 0.5 < file.fasta | fasta_rs filter --min-gc 0.5 | fasta_rs fa2tab > out.tsv`
 
 ## ToDo
-- [ ] Automatically extract sample name.
-- [ ] Allow reading stdin/stdout to allow piping.
 - [ ] Improve readability for writer.
-- [ ] Fix order of args, dispatch and imports.
+- [ ] Add buffer flush to writers.
 
 ## Subcommands
 🔴 Not implemented yet (but planning to).<br>
