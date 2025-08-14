@@ -22,7 +22,6 @@ The following command will randomly sample 50% of the sequences, filter by gc co
 ## ToDo
 - [ ] Improve readability for writer.
 - [ ] Add buffer flush to writers.
-- [ ] Rayon global threadpool for provided --threads arg.
 
 ## Subcommands
 🔴 Not implemented yet (but planning to).<br>

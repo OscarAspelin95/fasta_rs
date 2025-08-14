@@ -33,9 +33,8 @@ pub struct GlobalOpts {
         short,
         long,
         global = true,
-        required = false,
-        default_value_t = 8,
-        help = "Not applicable to all subcommands."
+        default_value_t = 0,
+        help = "Not applicable to all subcommands. By default set to 0, meaning Rayon will choose automatically."
     )]
     pub threads: usize,
 }
