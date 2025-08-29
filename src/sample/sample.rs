@@ -1,17 +1,13 @@
 use crate::common::AppError;
 use crate::common::reader::bio_fasta_reader;
 use crate::common::writer::bio_fasta_writer;
+use anyhow::Result;
 use bio::io::fasta::Record;
 use rand::{prelude::*, rng};
 use std::path::PathBuf;
 
-pub fn fasta_sample(
-    fasta: Option<PathBuf>,
-    by: f32,
-    outfile: Option<PathBuf>,
-) -> Result<(), AppError> {
+pub fn fasta_sample(fasta: Option<PathBuf>, by: f32, outfile: Option<PathBuf>) -> Result<()> {
     let reader = bio_fasta_reader(fasta)?;
-
     let mut writer = bio_fasta_writer(outfile)?;
 
     let mut fasta_records: Vec<Record> = Vec::new();
@@ -26,12 +22,10 @@ pub fn fasta_sample(
     // Randomly choose records to keep.
     let sample_by;
 
-    // sample num/fraction cannot be negative.
     if by <= 0.0 {
-        return Err(AppError::InvalidSampleValueError);
+        return Err(AppError::InvalidSampleValueError(by).into());
     }
 
-    // Check if we should downsample by num or fraction.
     if by <= 1.0 {
         sample_by = (by * fasta_records.len() as f32) as usize;
     } else {
@@ -42,10 +36,10 @@ pub fn fasta_sample(
     let sample = fasta_records.choose_multiple(&mut rng, sample_by);
 
     for r in sample {
-        writer
-            .write_record(r)
-            .map_err(|_| AppError::FastaWriteError)?;
+        writer.write_record(r)?;
     }
+
+    writer.flush()?;
 
     Ok(())
 }

@@ -1,4 +1,5 @@
 use crate::common::AppError;
+use anyhow::Result;
 use bio::io::fasta::Reader;
 use needletail::{FastxReader, parse_fastx_file, parse_fastx_stdin};
 use std::fs::File;
@@ -29,13 +30,15 @@ fn validate_fastx(fastx: &PathBuf) -> Result<&PathBuf, AppError> {
         return Err(AppError::FileDoesNotExistError);
     }
 
-    let fastx_str = fastx.to_str().ok_or(AppError::InvalidUtf8Error)?;
+    let fastx_str = fastx
+        .to_str()
+        .ok_or(AppError::InvalidUtf8Error(fastx.into()))?;
 
     if !VALID_EXTENSIONS
         .iter()
         .any(|extension| fastx_str.ends_with(extension))
     {
-        return Err(AppError::InvalidExtensionError);
+        return Err(AppError::InvalidExtensionError(fastx.into()));
     }
 
     return Ok(fastx);
@@ -43,13 +46,11 @@ fn validate_fastx(fastx: &PathBuf) -> Result<&PathBuf, AppError> {
 
 /// NOTE - not sure why this compiles and whether or not this is
 /// actually thread safe. Needs to be investigated.
-pub fn bio_fasta_reader(
-    fasta: Option<PathBuf>,
-) -> Result<Reader<BufReader<Box<dyn Read + Send>>>, AppError> {
+pub fn bio_fasta_reader(fasta: Option<PathBuf>) -> Result<Reader<BufReader<Box<dyn Read + Send>>>> {
     match fasta {
         Some(path) => {
             let valid_fasta = validate_fastx(&path)?;
-            let f = File::open(valid_fasta).map_err(|_| AppError::FastxReadError)?;
+            let f = File::open(valid_fasta)?;
 
             let reader = Reader::new(Box::new(f) as Box<dyn Read + Send>);
             Ok(reader)
@@ -61,16 +62,15 @@ pub fn bio_fasta_reader(
     }
 }
 
-pub fn needletail_fastx_reader(fastx: Option<PathBuf>) -> Result<Box<dyn FastxReader>, AppError> {
+pub fn needletail_fastx_reader(fastx: Option<PathBuf>) -> Result<Box<dyn FastxReader>> {
     match fastx {
         Some(fastx_file) => {
-            let reader = parse_fastx_file(&validate_fastx(&fastx_file)?)
-                .map_err(|_| AppError::FastxReadError)?;
+            let reader = parse_fastx_file(&validate_fastx(&fastx_file)?)?;
 
             return Ok(reader);
         }
         None => {
-            let reader = parse_fastx_stdin().map_err(|_| AppError::FastxReadError)?;
+            let reader = parse_fastx_stdin()?;
             return Ok(reader);
         }
     }

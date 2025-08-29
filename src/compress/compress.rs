@@ -1,4 +1,5 @@
-use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
+use crate::common::{get_bufwriter, needletail_fastx_reader};
+use anyhow::Result;
 use rstest::*;
 
 use std::{io::Write, path::PathBuf};
@@ -28,7 +29,7 @@ pub fn fasta_compress(
     fasta: Option<PathBuf>,
     max_hp_len: usize,
     outfile: Option<PathBuf>,
-) -> Result<(), AppError> {
+) -> Result<()> {
     assert!(max_hp_len > 0, "value of max_hp_len must be > 0.");
 
     let mut reader = needletail_fastx_reader(fasta)?;
@@ -37,35 +38,27 @@ pub fn fasta_compress(
     let mut writer = get_bufwriter(outfile)?;
 
     while let Some(record) = reader.next() {
-        match record {
-            Ok(record) => {
-                let compressed_sequence = homopolymer_compression(&record.seq(), max_hp_len);
+        let record = match record {
+            Ok(record) => record,
+            Err(_) => continue,
+        };
 
-                let id =
-                    std::str::from_utf8(record.id()).map_err(|_| AppError::InvalidUtf8Error)?;
+        let compressed_sequence = homopolymer_compression(&record.seq(), max_hp_len);
 
-                // Write sequence.
-                writer
-                    .write_all(b">")
-                    .map_err(|_| AppError::FastaWriteError)?;
-                writer
-                    .write_all(id.as_bytes())
-                    .map_err(|_| AppError::FastaWriteError)?;
-                writer
-                    .write_all(b"\n")
-                    .map_err(|_| AppError::FastaWriteError)?;
-                writer
-                    .write_all(&compressed_sequence)
-                    .map_err(|_| AppError::FastaWriteError)?;
-                writer
-                    .write_all(b"\n")
-                    .map_err(|_| AppError::FastaWriteError)?;
-            }
-            Err(_) => {
-                continue;
-            }
-        }
+        let id = std::str::from_utf8(record.id())?;
+
+        // Id.
+        writer.write_all(b">")?;
+        writer.write_all(id.as_bytes())?;
+        writer.write_all(b"\n")?;
+
+        // Sequence
+        writer.write_all(&compressed_sequence)?;
+        writer.write_all(b"\n")?;
     }
+
+    writer.flush()?;
+
     Ok(())
 }
 

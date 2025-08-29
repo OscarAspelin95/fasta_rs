@@ -1,5 +1,6 @@
 use crate::args::SearchType;
 use crate::common::{AppError, bio_fasta_reader, get_bufwriter, reverse_complement, usize_sub};
+use anyhow::Result;
 use bio::pattern_matching::myers::MyersBuilder;
 use memchr::memmem;
 use rayon::prelude::*;
@@ -29,11 +30,11 @@ pub struct PrimerPair {
     pub num_mismatch: Option<usize>,
 }
 
-fn extract_primer_info(primer_line: &String) -> Result<PrimerPair, AppError> {
+fn extract_primer_info(primer_line: &String) -> Result<PrimerPair> {
     let line_vec: Vec<&str> = primer_line.split("\t").map(|l| l.trim()).collect();
 
     if line_vec.len() < 5 {
-        return Err(AppError::PrimerLineFormatError);
+        return Err(AppError::PrimerLineFormatError(primer_line.to_owned()).into());
     }
 
     match line_vec.len() {
@@ -42,21 +43,12 @@ fn extract_primer_info(primer_line: &String) -> Result<PrimerPair, AppError> {
             let primer_name = line_vec[0];
             let forward_primer = line_vec[1].as_bytes();
             let reverse_primer = line_vec[2].as_bytes();
-            let min_len = line_vec[3]
-                .parse::<usize>()
-                .map_err(|_| AppError::PrimerLenParsingError)?;
-            let max_len = line_vec[4]
-                .parse::<usize>()
-                .map_err(|_| AppError::PrimerLenParsingError)?;
+            let min_len = line_vec[3].parse::<usize>()?;
+            let max_len = line_vec[4].parse::<usize>()?;
 
             // Try to extract number of mismatches from file if exists.
-            let num_mismatch: Option<usize> = line_vec
-                .get(5)
-                .map(|s| {
-                    s.parse::<usize>()
-                        .map_err(|_| AppError::PrimerLineFormatError)
-                })
-                .transpose()?;
+            let num_mismatch: Option<usize> =
+                line_vec.get(5).map(|s| s.parse::<usize>()).transpose()?;
 
             Ok(PrimerPair {
                 primer_name: primer_name.to_owned(),
@@ -67,12 +59,12 @@ fn extract_primer_info(primer_line: &String) -> Result<PrimerPair, AppError> {
                 num_mismatch,
             })
         }
-        _ => Err(AppError::PrimerLineFormatError),
+        _ => Err(AppError::PrimerLineFormatError(primer_line.to_owned()).into()),
     }
 }
 
-pub fn parse_primer_file<'a>(primer_file: &'a PathBuf) -> Result<Vec<PrimerPair>, AppError> {
-    let f = File::open(primer_file).map_err(|_| AppError::PrimerFileParsingError)?;
+pub fn parse_primer_file<'a>(primer_file: &'a PathBuf) -> Result<Vec<PrimerPair>> {
+    let f = File::open(primer_file)?;
 
     let reader = BufReader::new(f);
 
@@ -88,7 +80,7 @@ pub fn parse_primer_file<'a>(primer_file: &'a PathBuf) -> Result<Vec<PrimerPair>
     }
 
     match primer_pairs.len() {
-        0 => Err(AppError::NoPrimersFoundError),
+        0 => Err(AppError::NoPrimersFoundError.into()),
         _ => Ok(primer_pairs),
     }
 }
@@ -244,29 +236,27 @@ pub fn fasta_amplicon(
     primers: &PathBuf,
     search_type: &SearchType,
     outfile: Option<PathBuf>,
-) -> Result<(), AppError> {
+) -> Result<()> {
     // Read and parse primer file.
     let primer_pairs = parse_primer_file(primers)?;
 
     let reader = bio_fasta_reader(fasta)?;
 
-    let mut writer = get_bufwriter(outfile).map_err(|_| AppError::FastaWriteError)?;
+    let mut writer = get_bufwriter(outfile)?;
 
-    writer
-        .write_all(
-            format!(
-                "{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
-                "sequence_id",
-                "primer_name",
-                "start",
-                "end",
-                "insert_length",
-                "actual_length",
-                "amplicon"
-            )
-            .as_bytes(),
+    writer.write_all(
+        format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
+            "sequence_id",
+            "primer_name",
+            "start",
+            "end",
+            "insert_length",
+            "actual_length",
+            "amplicon"
         )
-        .map_err(|_| AppError::FastaWriteError)?;
+        .as_bytes(),
+    )?;
 
     let search_function = match search_type {
         SearchType::Exact => amplicon_exact_search,
@@ -306,11 +296,10 @@ pub fn fasta_amplicon(
         .collect();
 
     amplicon_results.iter().flatten().for_each(|r| {
-        writer
-            .write_all(r.as_bytes())
-            .map_err(|_| AppError::FastaWriteError)
-            .expect("Failed to write.");
+        writer.write_all(r.as_bytes()).expect("Failed to write.");
     });
+
+    writer.flush()?;
 
     Ok(())
 }

@@ -1,4 +1,4 @@
-use crate::common::AppError;
+use anyhow::Result;
 use bio::io::fasta::Writer;
 use serde::Serialize;
 use serde_json;
@@ -6,17 +6,17 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::{fs::File, io::BufWriter};
 
-pub fn write_json<T: Serialize>(outfile: Option<PathBuf>, s: T) -> Result<(), AppError> {
-    let writer = get_bufwriter(outfile).map_err(|_| AppError::FastaWriteError)?;
+pub fn write_json<T: Serialize>(outfile: Option<PathBuf>, s: T) -> Result<()> {
+    let writer = get_bufwriter(outfile)?;
     serde_json::to_writer(writer, &s).unwrap();
 
     Ok(())
 }
 
-pub fn get_bufwriter(outfile: Option<PathBuf>) -> Result<Box<dyn Write>, AppError> {
+pub fn get_bufwriter(outfile: Option<PathBuf>) -> Result<Box<dyn Write>> {
     match outfile {
         Some(outfile) => {
-            let f = File::create(outfile).map_err(|_| AppError::FastxReadError)?;
+            let f = File::create(outfile)?;
             let writer = BufWriter::new(f);
 
             Ok(Box::new(writer))
@@ -29,10 +29,10 @@ pub fn get_bufwriter(outfile: Option<PathBuf>) -> Result<Box<dyn Write>, AppErro
 }
 
 /// Meant for writing bio::io::Fasta::Record.
-pub fn bio_fasta_writer(outfile: Option<PathBuf>) -> Result<Writer<Box<dyn Write>>, AppError> {
+pub fn bio_fasta_writer(outfile: Option<PathBuf>) -> Result<Writer<Box<dyn Write>>> {
     match outfile {
         Some(outfile) => {
-            let f = File::create(outfile).map_err(|_| AppError::FastxReadError)?;
+            let f = File::create(outfile)?;
             let writer = Writer::new(Box::new(BufWriter::new(f)) as Box<dyn Write>);
             return Ok(writer);
         }

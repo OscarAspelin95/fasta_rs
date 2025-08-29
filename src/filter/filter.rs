@@ -1,6 +1,7 @@
 use crate::common::utils::nucleotide_probabilities;
-use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
+use crate::common::{get_bufwriter, needletail_fastx_reader};
 use crate::common::{nucleotide_counts, shannon_entropy};
+use anyhow::Result;
 use std::path::PathBuf;
 
 #[allow(unused)]
@@ -17,7 +18,7 @@ pub fn fasta_filter(
     min_entropy: f32,
     max_entropy: f32,
     outfile: Option<PathBuf>,
-) -> Result<(), AppError> {
+) -> Result<()> {
     let mut reader = needletail_fastx_reader(fasta)?;
     let mut writer = get_bufwriter(outfile)?;
 
@@ -64,17 +65,16 @@ pub fn fasta_filter(
 
         // Entropy
         let probs: Vec<f32> = nucleotide_probabilities(&canonical);
-
         let entropy = shannon_entropy(&probs);
 
         if entropy < min_entropy || entropy > max_entropy {
             continue;
         }
 
-        record
-            .write(&mut writer, None)
-            .map_err(|_| AppError::FastaWriteError)?;
+        record.write(&mut writer, None)?;
     }
+
+    writer.flush()?;
 
     Ok(())
 }
