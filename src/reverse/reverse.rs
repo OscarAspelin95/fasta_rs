@@ -1,40 +1,32 @@
 use needletail::Sequence;
 
-use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
+use crate::common::{get_bufwriter, needletail_fastx_reader};
+use anyhow::Result;
 use std::path::PathBuf;
 
-pub fn fasta_reverse(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<(), AppError> {
+pub fn fasta_reverse(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<()> {
     let mut reader = needletail_fastx_reader(fasta)?;
-    let mut writer = get_bufwriter(outfile).map_err(|_| AppError::FastaWriteError)?;
+    let mut writer = get_bufwriter(outfile)?;
 
     while let Some(record) = reader.next() {
         match record {
             Ok(record) => {
-                writer
-                    .write_all(b">")
-                    .map_err(|_| AppError::FastaWriteError)?;
+                // Id.
+                writer.write_all(b">")?;
+                writer.write_all(record.id())?;
 
-                writer
-                    .write_all(record.id())
-                    .map_err(|_| AppError::FastaWriteError)?;
-
-                writer
-                    .write_all(b"\n")
-                    .map_err(|_| AppError::FastaWriteError)?;
-
-                writer
-                    .write_all(&record.reverse_complement()[..])
-                    .map_err(|_| AppError::FastaWriteError)?;
-
-                writer
-                    .write_all(b"\n")
-                    .map_err(|_| AppError::FastaWriteError)?;
+                // Rev complement seq.
+                writer.write_all(b"\n")?;
+                writer.write_all(&record.reverse_complement()[..])?;
+                writer.write_all(b"\n")?;
             }
             Err(_) => {
                 continue;
             }
         };
     }
+
+    writer.flush()?;
 
     Ok(())
 }

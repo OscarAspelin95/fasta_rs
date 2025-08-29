@@ -1,4 +1,5 @@
-use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
+use crate::common::{get_bufwriter, needletail_fastx_reader};
+use anyhow::Result;
 use needletail::parser::SequenceRecord;
 use rstest::*;
 use std::io::Write;
@@ -37,7 +38,7 @@ pub fn find_homopolymers_in_record(
     min_hp_len: usize,
     strict: bool,
     writer: &mut Box<dyn Write>,
-) -> Result<(), AppError> {
+) -> Result<()> {
     // Extract sequence information.
     let seq = record.seq();
     let seq_len = seq.len();
@@ -57,50 +58,31 @@ pub fn find_homopolymers_in_record(
 
         // We have a homopolymer of required length.
         if valid_homopolymer(i, j, &seq[i], min_hp_len, strict) {
-            writer
-                .write_all(record.id())
-                .map_err(|_| AppError::FastaWriteError)?;
+            // Id.
+            writer.write_all(record.id())?;
+            writer.write_all(b"\t")?;
+            // Start of hp.
+            writer.write_all(i.to_string().as_bytes())?;
+            writer.write_all(b"\t")?;
 
-            writer
-                .write_all(b"\t")
-                .map_err(|_| AppError::FastaWriteError)?;
+            // End of hp.
+            writer.write_all(j.to_string().as_bytes())?;
+            writer.write_all(b"\t")?;
 
-            writer
-                .write_all(i.to_string().as_bytes())
-                .map_err(|_| AppError::FastaWriteError)?;
+            // Hp length.
+            writer.write_all((j - i).to_string().as_bytes())?;
+            writer.write_all(b"\t")?;
 
-            writer
-                .write_all(b"\t")
-                .map_err(|_| AppError::FastaWriteError)?;
-
-            writer
-                .write_all(j.to_string().as_bytes())
-                .map_err(|_| AppError::FastaWriteError)?;
-
-            writer
-                .write_all(b"\t")
-                .map_err(|_| AppError::FastaWriteError)?;
-
-            writer
-                .write_all((j - i).to_string().as_bytes())
-                .map_err(|_| AppError::FastaWriteError)?;
-
-            writer
-                .write_all(b"\t")
-                .map_err(|_| AppError::FastaWriteError)?;
-
-            writer
-                .write_all(&[seq[i]])
-                .map_err(|_| AppError::FastaWriteError)?;
-
-            writer
-                .write_all(b"\n")
-                .map_err(|_| AppError::FastaWriteError)?;
+            // Hp nucleotide.
+            writer.write_all(&[seq[i]])?;
+            writer.write_all(b"\n")?;
         }
 
         i = j;
         j += 1;
     }
+
+    writer.flush()?;
 
     Ok(())
 }
@@ -110,7 +92,7 @@ pub fn fasta_homopolymers(
     min_hp_len: usize,
     strict: bool,
     outfile: Option<PathBuf>,
-) -> Result<(), AppError> {
+) -> Result<()> {
     let mut reader = needletail_fastx_reader(fasta)?;
 
     // Output file writer.
@@ -124,13 +106,16 @@ pub fn fasta_homopolymers(
     writer.write_all(s.as_bytes()).unwrap();
 
     while let Some(record) = reader.next() {
-        match record {
-            Ok(record) => find_homopolymers_in_record(&record, min_hp_len, strict, &mut writer)?,
-            Err(_) => {
-                continue;
-            }
-        }
+        let record = match record {
+            Ok(record) => record,
+            Err(_) => continue,
+        };
+
+        find_homopolymers_in_record(&record, min_hp_len, strict, &mut writer)?
     }
+
+    writer.flush()?;
+
     Ok(())
 }
 

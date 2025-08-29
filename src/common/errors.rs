@@ -1,34 +1,19 @@
+use std::path::PathBuf;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum AppError {
-    #[error("Invalid UTF-8")]
-    InvalidUtf8Error,
-
-    #[error("Could not create directory")]
-    FailedToCreateDirError,
+    #[error("Invalid UTF-8: {0}")]
+    InvalidUtf8Error(PathBuf),
 
     #[error("File does not exist")]
     FileDoesNotExistError,
 
-    #[error("Failed to read fasta file")]
-    FastxReadError,
-
-    #[error("Failed to write to fasta file")]
-    FastaWriteError,
-
-    #[error("Invalid file extension")]
-    InvalidExtensionError,
-
-    // Amplicon Primer Errors.
-    #[error("Failed to parse primer file.")]
-    PrimerFileParsingError,
+    #[error("Invalid file extension for: {0}")]
+    InvalidExtensionError(PathBuf),
 
     #[error("Failed to parse primer line.")]
-    PrimerLineFormatError,
-
-    #[error("Invalid primer length.")]
-    PrimerLenParsingError,
+    PrimerLineFormatError(String),
 
     #[error("Failed to find any primers.")]
     NoPrimersFoundError,
@@ -36,6 +21,6 @@ pub enum AppError {
     #[error("Invalid range.")]
     InvalidRangeError,
 
-    #[error("Invalid sample value")]
-    InvalidSampleValueError,
+    #[error("Invalid sample value: {0}")]
+    InvalidSampleValueError(f32),
 }
