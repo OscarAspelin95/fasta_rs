@@ -19,10 +19,6 @@ Run with:<br>
 The following command will randomly sample 50% of the sequences, filter by gc content and finally convert to a .tsv file.<br>
 `fasta_rs sample -b 0.5 < file.fasta | fasta_rs filter --min-gc 0.5 | fasta_rs fa2tab > out.tsv`
 
-## ToDo
-- [ ] Improve readability for writer.
-- [ ] Add buffer flush to writers.
-
 ## Subcommands
 🔴 Not implemented yet (but planning to).<br>
 🟡 Implemented but not tested/fully featured.<br>
