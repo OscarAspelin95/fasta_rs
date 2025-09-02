@@ -160,6 +160,16 @@ Optional arguments:
 <b>-n/--num_seqs</b> [5] - Number of sequences to output.
 </pre>
 
+### fasta_rs `grep`
+🟢 Search and filter sequence ids by regular expressions.
+
+`fasta_rs grep --fasta <sequences.fasta> --pattern <regex_string> <optional_args>`
+
+Optional arguments:
+<pre>
+<b>-o/--outfile</b> [stdout] - Output file.
+</pre>
+
 ### fasta_rs `amplicon`
 🟢 In silico PCR by exact or fuzzy primer matching.
 

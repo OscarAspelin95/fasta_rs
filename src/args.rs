@@ -170,6 +170,16 @@ pub enum SubCommand {
         #[clap(short, long)]
         outfile: Option<PathBuf>,
     },
+    Grep {
+        #[clap(short, long)]
+        fastq: Option<PathBuf>,
+
+        #[clap(short, long)]
+        pattern: String,
+
+        #[clap(short, long)]
+        outfile: Option<PathBuf>,
+    },
     Amplicon {
         #[clap(short, long)]
         fasta: Option<PathBuf>,

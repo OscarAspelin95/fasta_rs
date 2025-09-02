@@ -5,6 +5,7 @@ use crate::compress::fasta_compress;
 use crate::extract::fasta_extract;
 use crate::fa2tab::fasta_fa2tab;
 use crate::filter::fasta_filter;
+use crate::grep::fasta_grep;
 use crate::head::fasta_head;
 use crate::homopolymers::fasta_homopolymers;
 use crate::reverse::fasta_reverse;
@@ -24,6 +25,11 @@ pub fn dispatch(args: App) {
             num_seqs,
             outfile,
         } => fasta_head(fasta, num_seqs, outfile).unwrap(),
+        SubCommand::Grep {
+            fastq,
+            pattern,
+            outfile,
+        } => fasta_grep(fastq, pattern, outfile).unwrap(),
         SubCommand::Homopolymers {
             fasta,
             min_hp_len,

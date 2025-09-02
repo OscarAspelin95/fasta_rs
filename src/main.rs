@@ -9,6 +9,7 @@ mod dispatch;
 mod extract;
 mod fa2tab;
 mod filter;
+mod grep;
 mod head;
 mod homopolymers;
 mod reverse;
