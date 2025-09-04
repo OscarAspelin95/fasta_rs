@@ -1,5 +1,5 @@
 # fasta_rs
-🚧 Work in progress fasta toolkit, aiming to an alternative to [seqkit](https://github.com/shenwei356/seqkit/).
+Fasta toolkit, aiming to an alternative to [seqkit](https://github.com/shenwei356/seqkit/).
 
 ## Requirements
 - Linux OS (Ubuntu 24.04.2)
