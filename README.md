@@ -20,12 +20,9 @@ The following command will randomly sample 50% of the sequences, filter by gc co
 `fasta_rs sample -b 0.5 < file.fasta | fasta_rs filter --min-gc 0.5 | fasta_rs fa2tab > out.tsv`
 
 ## Subcommands
-🔴 Not implemented yet (but planning to).<br>
-🟡 Implemented but not tested/fully featured.<br>
-🟢 Beta-mode available!
 
 ### fasta_rs `split`
-🟢 Split into one file per sequence.
+Split into one file per sequence.
 
 `fasta_rs split --fasta <sequences.fasta> <optional_args>`
 
@@ -35,7 +32,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `stats`
-🟢 Calculate basic stats.
+Calculate basic stats.
 
 `fasta_rs stats --fasta <sequences.fasta> <optional_args>`
 
@@ -45,7 +42,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `fa2tab`
-🟢 Generate a .tsv file with basic information about each sequence.
+Generate a .tsv file with basic information about each sequence.
 
 `fasta_rs fa2tab --fasta <sequences.fasta> <optional_args>`
 
@@ -55,7 +52,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `homopolymers`
-🟢 Find homopolymers in sequences.
+Find homopolymers in sequences.
 
 `fasta_rs homopolymers --fasta <sequences.fasta> <optional_args>`
 
@@ -69,7 +66,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `filter`
-🟢 Filter sequences based on certain criteria.
+Filter sequences based on certain criteria.
 
 `fasta_rs filter --fasta <sequences.fasta> <optional_args>`
 
@@ -99,7 +96,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `extract`
-🟢 Extract sub-sequence based on provided range.
+Extract sub-sequence based on provided range.
 
 `fasta_rs extract --fasta <sequences.fasta> <optional_args>`
 
@@ -115,7 +112,7 @@ Optional arguments:
 Since the coordinates are BED-compatible, extracting the ith base would be equivalent to using `-s i-1` and `-e i`
 
 ### fasta_rs `sample`
-🟢 (down)sample sequences based on a number or proportion.
+Sample sequences based on a number or proportion.
 
 `fasta_rs sample --fasta <sequences.fasta> <optional_args>`
 
@@ -127,7 +124,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `sort`
-🟢 Sort sequences by a given metric.
+Sort sequences by a given metric.
 
 `fasta_rs sort --fasta <sequences.fasta> <optional_args>`
 
@@ -141,7 +138,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `shuffle`
-🟢 Randomly shuffle sequences.
+Randomly shuffle sequences.
 
 `fasta_rs shuffle --fasta <sequences.fasta> <optional_args>`
 
@@ -151,7 +148,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `head`
-🟢 View the first n sequences.
+View the first n sequences.
 
 `fasta_rs head --fasta <sequences.fasta> <optional_args>`
 
@@ -161,7 +158,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `grep`
-🟢 Search and filter sequence ids by regular expressions.
+Search and filter sequence ids by regular expressions.
 
 `fasta_rs grep --fasta <sequences.fasta> --pattern <regex_string> <optional_args>`
 
@@ -171,7 +168,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `amplicon`
-🟢 In silico PCR by exact or fuzzy primer matching.
+In silico PCR by exact or fuzzy primer matching.
 
 `fasta_rs amplicon --fasta <sequences.fasta> --primers <primers.tsv> --search-type {exact, fuzzy} <optional_args>`
 
@@ -190,7 +187,7 @@ The primer.tsv TAB separated file needs to specifies the following for each prim
 - Num allowed mismatches (only for fuzzy search).
 
 ### fasta_rs `compress`
-🟢 Homopolymer compress sequences.
+Homopolymer compress sequences.
 
 `fasta_rs compress --fasta <sequences.fasta> <optional_args>`
 
@@ -202,7 +199,7 @@ Optional arguments:
 </pre>
 
 ### fasta_rs `reverse`
-🟢 Reverse complement sequences.
+Reverse complement sequences.
 
 `fasta_rs reverse --fasta <sequences.fasta> <optional_args>`
 

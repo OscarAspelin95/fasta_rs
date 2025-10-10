@@ -2,27 +2,10 @@ use clap::Parser;
 use rayon::ThreadPoolBuilder;
 use simple_logger::SimpleLogger;
 
-mod amplicon;
-mod common;
-mod compress;
+use fasta_rs::args::App;
+
 mod dispatch;
-mod extract;
-mod fa2tab;
-mod filter;
-mod grep;
-mod head;
-mod homopolymers;
-mod reverse;
-mod sample;
-mod shuffle;
-mod sort;
-mod split;
-mod stats;
-
 use dispatch::dispatch;
-
-mod args;
-use args::App;
 
 fn main() {
     SimpleLogger::new().init().unwrap();
