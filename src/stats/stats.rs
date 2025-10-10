@@ -6,15 +6,15 @@ use std::path::PathBuf;
 use std::usize;
 
 #[derive(Debug, Serialize)]
-struct FastaStats {
-    num_seqs: usize,
-    num_bases: usize,
-    mean_len: f32,
-    min_len: usize,
-    max_len: usize,
+pub struct FastaStats {
+    pub num_seqs: usize,
+    pub num_bases: usize,
+    pub mean_len: f32,
+    pub min_len: usize,
+    pub max_len: usize,
 }
 
-pub fn fasta_stats(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<()> {
+pub fn fasta_stats(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<FastaStats> {
     let mut reader = needletail_fastx_reader(fasta)?;
 
     let mut num_seqs = 0;
@@ -45,7 +45,7 @@ pub fn fasta_stats(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<(
         max_len: max_len,
     };
 
-    write_json(outfile, fasta_stats)?;
+    write_json(outfile, &fasta_stats)?;
 
-    Ok(())
+    Ok(fasta_stats)
 }

@@ -1,2 +1,2 @@
 pub mod stats;
-pub use stats::fasta_stats;
+pub use stats::{FastaStats, fasta_stats};

@@ -17,7 +17,9 @@ use fasta_rs::stats::fasta_stats;
 pub fn dispatch(args: App) {
     match args.command {
         SubCommand::Split { fasta, outdir } => fasta_split(fasta, &outdir).unwrap(),
-        SubCommand::Stats { fasta, outfile } => fasta_stats(fasta, outfile).unwrap(),
+        SubCommand::Stats { fasta, outfile } => {
+            let _ = fasta_stats(fasta, outfile).unwrap();
+        }
         SubCommand::Fa2tab { fasta, outfile } => fasta_fa2tab(fasta, outfile).unwrap(),
         SubCommand::Head {
             fasta,
