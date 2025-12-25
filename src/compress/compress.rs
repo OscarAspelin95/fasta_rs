@@ -1,5 +1,4 @@
-use crate::common::{get_bufwriter, needletail_fastx_reader};
-use anyhow::Result;
+use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
 use rstest::*;
 
 use std::{io::Write, path::PathBuf};
@@ -29,7 +28,7 @@ pub fn fasta_compress(
     fasta: Option<PathBuf>,
     max_hp_len: usize,
     outfile: Option<PathBuf>,
-) -> Result<()> {
+) -> Result<(), AppError> {
     assert!(max_hp_len > 0, "value of max_hp_len must be > 0.");
 
     let mut reader = needletail_fastx_reader(fasta)?;

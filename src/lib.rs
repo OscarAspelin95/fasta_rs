@@ -2,15 +2,6 @@
 //!
 //! This crate provides utilities for common operations such as filtering, searching, sorting, etc.
 //!
-//! # Example
-//! ```
-//! use fasta_rs::stats::fasta_stats;
-//!
-//! let fasta = PathBuf::from("contigs.fasta");
-//! let outfile = PathBuf::from("stats.json");
-//! fasta_stats(Some(fasta), Some(outfile)).unwrap();
-//! ```
-//!
 //! See the documentation for details about each command.
 pub mod amplicon;
 pub mod args;

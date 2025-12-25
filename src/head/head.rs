@@ -1,8 +1,11 @@
-use crate::common::{get_bufwriter, needletail_fastx_reader};
-use anyhow::Result;
+use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
 use std::path::PathBuf;
 
-pub fn fasta_head(fasta: Option<PathBuf>, num_seqs: usize, outfile: Option<PathBuf>) -> Result<()> {
+pub fn fasta_head(
+    fasta: Option<PathBuf>,
+    num_seqs: usize,
+    outfile: Option<PathBuf>,
+) -> Result<(), AppError> {
     let mut reader = needletail_fastx_reader(fasta)?;
     let mut writer = get_bufwriter(outfile)?;
 

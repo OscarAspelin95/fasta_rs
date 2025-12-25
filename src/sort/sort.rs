@@ -1,8 +1,8 @@
 use crate::args::SortType;
+use crate::common::AppError;
 use crate::common::utils::nucleotide_probabilities;
 use crate::common::writer::bio_fasta_writer;
 use crate::common::{bio_fasta_reader, gc_content, nucleotide_counts, shannon_entropy};
-use anyhow::Result;
 use bio::io::fasta::Record;
 use rayon::prelude::*;
 use serde::Serialize;
@@ -75,7 +75,7 @@ pub fn fasta_sort(
     sort_type: SortType,
     reverse: bool,
     outfile: Option<PathBuf>,
-) -> Result<()> {
+) -> Result<(), AppError> {
     let reader = bio_fasta_reader(fasta)?;
 
     let mut fasta_records: Vec<FastaRecord> = reader

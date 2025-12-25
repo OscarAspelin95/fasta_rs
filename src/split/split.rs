@@ -1,10 +1,9 @@
-use crate::common::{get_bufwriter, needletail_fastx_reader};
+use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
 use crate::file_path;
-use anyhow::Result;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
 
-pub fn fasta_split(fasta: Option<PathBuf>, outdir: &PathBuf) -> Result<()> {
+pub fn fasta_split(fasta: Option<PathBuf>, outdir: &PathBuf) -> Result<(), AppError> {
     let mut reader = needletail_fastx_reader(fasta)?;
 
     create_dir_all(outdir)?;

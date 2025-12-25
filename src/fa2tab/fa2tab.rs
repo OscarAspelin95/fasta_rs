@@ -1,11 +1,10 @@
 use crate::common::{
-    gc_content, get_bufwriter, needletail_fastx_reader, nucleotide_counts, shannon_entropy,
-    utils::nucleotide_probabilities,
+    AppError, gc_content, get_bufwriter, needletail_fastx_reader, nucleotide_counts,
+    shannon_entropy, utils::nucleotide_probabilities,
 };
-use anyhow::Result;
 use std::{io::Write, path::PathBuf};
 
-pub fn fasta_fa2tab(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<()> {
+pub fn fasta_fa2tab(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<(), AppError> {
     let mut reader = needletail_fastx_reader(fasta)?;
 
     let mut writer = get_bufwriter(outfile)?;

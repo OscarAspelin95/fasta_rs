@@ -1,4 +1,4 @@
-use anyhow::Result;
+use crate::common::AppError;
 use bio::io::fasta::Writer;
 use serde::Serialize;
 use serde_json;
@@ -6,14 +6,14 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::{fs::File, io::BufWriter};
 
-pub fn write_json<T: Serialize>(outfile: Option<PathBuf>, s: T) -> Result<()> {
+pub fn write_json<T: Serialize>(outfile: Option<PathBuf>, s: T) -> Result<(), AppError> {
     let writer = get_bufwriter(outfile)?;
     serde_json::to_writer(writer, &s).unwrap();
 
     Ok(())
 }
 
-pub fn get_bufwriter(outfile: Option<PathBuf>) -> Result<Box<dyn Write>> {
+pub fn get_bufwriter(outfile: Option<PathBuf>) -> Result<Box<dyn Write>, AppError> {
     match outfile {
         Some(outfile) => {
             let f = File::create(outfile)?;
@@ -29,7 +29,7 @@ pub fn get_bufwriter(outfile: Option<PathBuf>) -> Result<Box<dyn Write>> {
 }
 
 /// Meant for writing bio::io::Fasta::Record.
-pub fn bio_fasta_writer(outfile: Option<PathBuf>) -> Result<Writer<Box<dyn Write>>> {
+pub fn bio_fasta_writer(outfile: Option<PathBuf>) -> Result<Writer<Box<dyn Write>>, AppError> {
     match outfile {
         Some(outfile) => {
             let f = File::create(outfile)?;

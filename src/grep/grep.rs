@@ -1,9 +1,12 @@
-use crate::common::{get_bufwriter, needletail_fastx_reader};
-use anyhow::Result;
+use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
 use regex::Regex;
 use std::path::PathBuf;
 
-pub fn fasta_grep(fastq: Option<PathBuf>, pattern: String, outfile: Option<PathBuf>) -> Result<()> {
+pub fn fasta_grep(
+    fastq: Option<PathBuf>,
+    pattern: String,
+    outfile: Option<PathBuf>,
+) -> Result<(), AppError> {
     let mut reader = needletail_fastx_reader(fastq)?;
     let mut writer = get_bufwriter(outfile)?;
 

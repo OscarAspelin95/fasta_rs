@@ -1,6 +1,5 @@
 use crate::args::SearchType;
 use crate::common::{AppError, bio_fasta_reader, get_bufwriter, reverse_complement, usize_sub};
-use anyhow::Result;
 use bio::pattern_matching::myers::MyersBuilder;
 use memchr::memmem;
 use rayon::prelude::*;
@@ -30,7 +29,7 @@ pub struct PrimerPair {
     pub num_mismatch: Option<usize>,
 }
 
-fn extract_primer_info(primer_line: &String) -> Result<PrimerPair> {
+fn extract_primer_info(primer_line: &String) -> Result<PrimerPair, AppError> {
     let line_vec: Vec<&str> = primer_line.split("\t").map(|l| l.trim()).collect();
 
     if line_vec.len() < 5 {
@@ -46,7 +45,6 @@ fn extract_primer_info(primer_line: &String) -> Result<PrimerPair> {
             let min_len = line_vec[3].parse::<usize>()?;
             let max_len = line_vec[4].parse::<usize>()?;
 
-            // Try to extract number of mismatches from file if exists.
             let num_mismatch: Option<usize> =
                 line_vec.get(5).map(|s| s.parse::<usize>()).transpose()?;
 
@@ -63,7 +61,7 @@ fn extract_primer_info(primer_line: &String) -> Result<PrimerPair> {
     }
 }
 
-pub fn parse_primer_file<'a>(primer_file: &'a PathBuf) -> Result<Vec<PrimerPair>> {
+pub fn parse_primer_file<'a>(primer_file: &'a PathBuf) -> Result<Vec<PrimerPair>, AppError> {
     let f = File::open(primer_file)?;
 
     let reader = BufReader::new(f);
@@ -236,7 +234,7 @@ pub fn fasta_amplicon(
     primers: &PathBuf,
     search_type: &SearchType,
     outfile: Option<PathBuf>,
-) -> Result<()> {
+) -> Result<(), AppError> {
     // Read and parse primer file.
     let primer_pairs = parse_primer_file(primers)?;
 

@@ -1,5 +1,4 @@
 use crate::common::AppError;
-use anyhow::Result;
 use bio::io::fasta::Reader;
 use needletail::{FastxReader, parse_fastx_file, parse_fastx_stdin};
 use std::fs::File;
@@ -30,9 +29,7 @@ fn validate_fastx(fastx: &PathBuf) -> Result<&PathBuf, AppError> {
         return Err(AppError::FileDoesNotExistError);
     }
 
-    let fastx_str = fastx
-        .to_str()
-        .ok_or(AppError::InvalidUtf8Error(fastx.into()))?;
+    let fastx_str = fastx.to_str().expect("");
 
     if !VALID_EXTENSIONS
         .iter()
@@ -44,9 +41,9 @@ fn validate_fastx(fastx: &PathBuf) -> Result<&PathBuf, AppError> {
     return Ok(fastx);
 }
 
-/// NOTE - not sure why this compiles and whether or not this is
-/// actually thread safe. Needs to be investigated.
-pub fn bio_fasta_reader(fasta: Option<PathBuf>) -> Result<Reader<BufReader<Box<dyn Read + Send>>>> {
+pub fn bio_fasta_reader(
+    fasta: Option<PathBuf>,
+) -> Result<Reader<BufReader<Box<dyn Read + Send>>>, AppError> {
     match fasta {
         Some(path) => {
             let valid_fasta = validate_fastx(&path)?;
@@ -62,7 +59,7 @@ pub fn bio_fasta_reader(fasta: Option<PathBuf>) -> Result<Reader<BufReader<Box<d
     }
 }
 
-pub fn needletail_fastx_reader(fastx: Option<PathBuf>) -> Result<Box<dyn FastxReader>> {
+pub fn needletail_fastx_reader(fastx: Option<PathBuf>) -> Result<Box<dyn FastxReader>, AppError> {
     match fastx {
         Some(fastx_file) => {
             let reader = parse_fastx_file(&validate_fastx(&fastx_file)?)?;

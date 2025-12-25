@@ -1,5 +1,4 @@
 use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
-use anyhow::Result;
 use std::{io::Write, path::PathBuf};
 
 pub fn fasta_extract(
@@ -7,7 +6,7 @@ pub fn fasta_extract(
     start: usize,
     end: usize,
     outfile: Option<PathBuf>,
-) -> Result<()> {
+) -> Result<(), AppError> {
     let mut reader = needletail_fastx_reader(fasta)?;
 
     if start >= end {
