@@ -31,7 +31,7 @@ pub fn nucleotide_counts(seq: &[u8]) -> (HashMap<&u8, usize>, usize, usize) {
         }
     }
 
-    return (canonical, softmasked_count, ambiguous_count);
+    (canonical, softmasked_count, ambiguous_count)
 }
 
 #[inline]
@@ -43,26 +43,24 @@ pub fn nucleotide_probabilities(canonical: &HashMap<&u8, usize>) -> Vec<f32> {
         .map(|count| *count as f32 / canonical_count as f32)
         .collect();
 
-    return probs;
+    probs
 }
 
 #[inline]
-pub fn shannon_entropy(probs: &Vec<f32>) -> f32 {
+pub fn shannon_entropy(probs: &[f32]) -> f32 {
     // Probabilities of each nucleotide.
 
     let shannon: f32 = probs
         .iter()
         .map(|prob| match prob {
-            0_f32 => return 0 as f32,
+            0_f32 => 0 as f32,
             // This is safe because prob is never negative since
             // both count and sum_count are of type usize.
-            _ => {
-                return prob * prob.log2();
-            }
+            _ => prob * prob.log2(),
         })
         .sum();
 
-    return -shannon;
+    -shannon
 }
 #[inline]
 pub fn gc_content(seq: &[u8]) -> f32 {
@@ -97,7 +95,7 @@ pub fn reverse_complement(seq: &[u8]) -> Vec<u8> {
         })
         .collect();
 
-    return reverse_complement;
+    reverse_complement
 }
 
 #[inline]
@@ -106,7 +104,7 @@ pub fn usize_sub(a: usize, b: usize) -> usize {
         return a - b;
     }
 
-    return 0;
+    0
 }
 
 #[rstest]

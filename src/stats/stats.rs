@@ -1,7 +1,6 @@
 use crate::common::{AppError, needletail_fastx_reader, write_json};
 use serde::Serialize;
 use std::path::PathBuf;
-use std::usize;
 
 #[derive(Debug, Serialize)]
 pub struct FastaStats {
@@ -39,11 +38,11 @@ pub fn fasta_stats(
     }
 
     let fasta_stats = FastaStats {
-        num_seqs: num_seqs,
-        num_bases: num_bases,
+        num_seqs,
+        num_bases,
         mean_len: num_bases as f32 / num_seqs as f32,
-        min_len: min_len,
-        max_len: max_len,
+        min_len,
+        max_len,
     };
 
     write_json(outfile, &fasta_stats)?;

@@ -29,11 +29,11 @@ pub struct PrimerPair {
     pub num_mismatch: Option<usize>,
 }
 
-fn extract_primer_info(primer_line: &String) -> Result<PrimerPair, AppError> {
+fn extract_primer_info(primer_line: &str) -> Result<PrimerPair, AppError> {
     let line_vec: Vec<&str> = primer_line.split("\t").map(|l| l.trim()).collect();
 
     if line_vec.len() < 5 {
-        return Err(AppError::PrimerLineFormatError(primer_line.to_owned()).into());
+        return Err(AppError::PrimerLineFormatError(primer_line.to_owned()));
     }
 
     match line_vec.len() {
@@ -52,39 +52,36 @@ fn extract_primer_info(primer_line: &String) -> Result<PrimerPair, AppError> {
                 primer_name: primer_name.to_owned(),
                 forward_primer: forward_primer.to_owned(),
                 reverse_primer: reverse_primer.to_owned(),
-                min_len: min_len,
-                max_len: max_len,
+                min_len,
+                max_len,
                 num_mismatch,
             })
         }
-        _ => Err(AppError::PrimerLineFormatError(primer_line.to_owned()).into()),
+        _ => Err(AppError::PrimerLineFormatError(primer_line.to_owned())),
     }
 }
 
-pub fn parse_primer_file<'a>(primer_file: &'a PathBuf) -> Result<Vec<PrimerPair>, AppError> {
+pub fn parse_primer_file(primer_file: &PathBuf) -> Result<Vec<PrimerPair>, AppError> {
     let f = File::open(primer_file)?;
 
     let reader = BufReader::new(f);
-
     let mut primer_pairs: Vec<PrimerPair> = Vec::new();
 
-    for (_, line) in reader.lines().enumerate() {
-        if let Ok(primer_line) = line {
-            match extract_primer_info(&primer_line) {
-                Ok(primer_pair) => primer_pairs.push(primer_pair),
-                Err(_) => continue,
-            }
+    for primer_line in reader.lines().map_while(Result::ok) {
+        match extract_primer_info(&primer_line) {
+            Ok(primer_pair) => primer_pairs.push(primer_pair),
+            Err(_) => continue,
         }
     }
 
     match primer_pairs.len() {
-        0 => Err(AppError::NoPrimersFoundError.into()),
+        0 => Err(AppError::NoPrimersFoundError),
         _ => Ok(primer_pairs),
     }
 }
 
 fn myers_builder(primer_seq: &[u8]) -> bio::pattern_matching::myers::Myers {
-    return MyersBuilder::new()
+    MyersBuilder::new()
         .ambig(b'N', b"ACGT")
         .ambig(b'R', b"AG")
         .ambig(b'Y', b"CT")
@@ -96,7 +93,7 @@ fn myers_builder(primer_seq: &[u8]) -> bio::pattern_matching::myers::Myers {
         .ambig(b'D', b"AGT")
         .ambig(b'H', b"ACT")
         .ambig(b'V', b"ACG")
-        .build_64(primer_seq);
+        .build_64(primer_seq)
 }
 
 #[allow(unused)]
@@ -127,8 +124,8 @@ pub fn amplicon_fuzzy_search<'a>(
 
     let mut amplicons: Vec<AmpliconResult> = Vec::new();
 
-    let mut myers_forward = myers_builder(&forward_primer);
-    let mut myers_reverse = myers_builder(&rcps);
+    let mut myers_forward = myers_builder(forward_primer);
+    let mut myers_reverse = myers_builder(rcps);
 
     // There is something about myers matching that causes duplicates, probably
     // multiple alignments in the same location. To prevent this, a temp solution
@@ -145,15 +142,16 @@ pub fn amplicon_fuzzy_search<'a>(
         }
         forward_starts.insert(start);
 
-        // For a given start primer match, we only allow unique reverse primer matching positions.
         let mut reverse_starts: HashSet<usize> = HashSet::new();
         for (reverse_hit, _, _) in myers_reverse.find_all(seq, num_mismatch) {
-            let insert_length: usize = usize_sub(reverse_hit, start);
+            let insert_length = match usize_sub(reverse_hit, start) {
+                0 => continue,
+                insert_length => insert_length,
+            };
 
             if reverse_starts.contains(&reverse_hit) {
                 continue;
             }
-
             reverse_starts.insert(reverse_hit);
 
             // If amplicon is within allowed length.
@@ -161,10 +159,10 @@ pub fn amplicon_fuzzy_search<'a>(
                 let amplicon = &seq[start..reverse_hit];
 
                 let amplicon_result = AmpliconResult {
-                    amplicon: amplicon,
-                    start: start,
+                    amplicon,
+                    start,
                     end: reverse_hit,
-                    insert_length: insert_length,
+                    insert_length,
                     total_length: forward_len + insert_length + reverse_len,
                 };
 
@@ -173,8 +171,9 @@ pub fn amplicon_fuzzy_search<'a>(
         }
     }
 
-    return amplicons;
+    amplicons
 }
+
 #[allow(unused)]
 pub fn amplicon_exact_search<'a>(
     seq: &'a [u8],
@@ -214,10 +213,10 @@ pub fn amplicon_exact_search<'a>(
                 let amplicon = &seq[start..*reverse_hit];
 
                 let amplicon_result = AmpliconResult {
-                    amplicon: amplicon,
-                    start: start,
+                    amplicon,
+                    start,
                     end: *reverse_hit,
-                    insert_length: insert_length,
+                    insert_length,
                     total_length: forward_len + insert_length + reverse_len,
                 };
 
@@ -226,7 +225,7 @@ pub fn amplicon_exact_search<'a>(
         }
     }
 
-    return amplicons;
+    amplicons
 }
 
 pub fn fasta_amplicon(
@@ -266,30 +265,35 @@ pub fn fasta_amplicon(
         .par_bridge()
         .filter_map(|record| {
             if let Ok(record) = record {
-                for primer_pair in &primer_pairs {
-                    let amplicons = search_function(&record.seq(), primer_pair);
+                let result_vec: Vec<String> = primer_pairs
+                    .iter()
+                    .flat_map(|primer_pair| {
+                        let amplicons = search_function(record.seq(), primer_pair);
+                        amplicons
+                            .into_iter()
+                            .map(|amplicon| {
+                                format!(
+                                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
+                                    record.id(),
+                                    primer_pair.primer_name,
+                                    amplicon.start,
+                                    amplicon.end,
+                                    amplicon.insert_length,
+                                    amplicon.total_length,
+                                    std::str::from_utf8(amplicon.amplicon).unwrap()
+                                )
+                            })
+                            .collect::<Vec<_>>()
+                    })
+                    .collect();
 
-                    let result_vec: Vec<String> = amplicons
-                        .iter()
-                        .map(|amplicon| {
-                            format!(
-                                "{}\t{}\t{}\t{}\t{}\t{}\t{}\n",
-                                record.id(),
-                                primer_pair.primer_name,
-                                amplicon.start,
-                                amplicon.end,
-                                amplicon.insert_length,
-                                amplicon.total_length,
-                                std::str::from_utf8(amplicon.amplicon).unwrap()
-                            )
-                        })
-                        .collect();
-
-                    return Some(result_vec);
+                if result_vec.is_empty() {
+                    return None;
                 }
+                return Some(result_vec);
             }
 
-            return None;
+            None
         })
         .collect();
 

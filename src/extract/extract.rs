@@ -10,7 +10,7 @@ pub fn fasta_extract(
     let mut reader = needletail_fastx_reader(fasta)?;
 
     if start >= end {
-        return Err(AppError::InvalidRangeError.into());
+        return Err(AppError::InvalidRangeError);
     }
 
     let mut writer = get_bufwriter(outfile)?;

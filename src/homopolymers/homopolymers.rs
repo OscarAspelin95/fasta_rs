@@ -9,16 +9,16 @@ use std::path::PathBuf;
 fn u8_to_char(nt: &u8) -> Option<char> {
     match nt {
         // Default nucleotides.
-        b'A' => return Some('A'),
-        b'T' => return Some('T'),
-        b'C' => return Some('C'),
-        b'G' => return Some('G'),
+        b'A' => Some('A'),
+        b'T' => Some('T'),
+        b'C' => Some('C'),
+        b'G' => Some('G'),
         // Soft masked nucleotides.
-        b'a' => return Some('a'),
-        b't' => return Some('t'),
-        b'c' => return Some('c'),
-        b'g' => return Some('g'),
-        _ => return None,
+        b'a' => Some('a'),
+        b't' => Some('t'),
+        b'c' => Some('c'),
+        b'g' => Some('g'),
+        _ => None,
     }
 }
 
@@ -26,10 +26,10 @@ fn u8_to_char(nt: &u8) -> Option<char> {
 fn valid_homopolymer(i: usize, j: usize, nt: &u8, min_hp_len: usize, strict: bool) -> bool {
     let valid_len = j - i >= min_hp_len;
 
-    match (strict, u8_to_char(&nt)) {
-        (false, _) => return valid_len,
-        (true, Some(_)) => return valid_len,
-        (true, None) => return false,
+    match (strict, u8_to_char(nt)) {
+        (false, _) => valid_len,
+        (true, Some(_)) => valid_len,
+        (true, None) => false,
     }
 }
 #[inline]

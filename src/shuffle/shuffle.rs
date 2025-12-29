@@ -4,18 +4,13 @@ use bio::io::fasta::Record;
 use rand::{prelude::*, rng};
 use std::path::PathBuf;
 
+// Switch to needletail
 pub fn fasta_shuffle(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<(), AppError> {
     let reader = bio_fasta_reader(fasta)?;
     let mut writer = bio_fasta_writer(outfile)?;
 
-    let mut fasta_records: Vec<Record> = Vec::new();
-
-    reader.records().for_each(|record| match record {
-        Ok(record) => {
-            fasta_records.push(record);
-        }
-        Err(_) => return,
-    });
+    let mut fasta_records: Vec<Record> =
+        reader.records().filter_map(|record| record.ok()).collect();
 
     // Shuffle records.
     let mut rng = rng();

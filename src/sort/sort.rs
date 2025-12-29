@@ -8,7 +8,6 @@ use rayon::prelude::*;
 use serde::Serialize;
 use std::cmp::Ordering;
 use std::path::PathBuf;
-use std::usize;
 
 #[derive(Debug, Serialize)]
 struct FastaRecord {
@@ -19,31 +18,31 @@ struct FastaRecord {
     ambiguous_count: usize,
 }
 
-fn ascending_or_descending<T: PartialOrd>(ordering: Ordering, reverse: bool) -> Ordering {
+fn ascending_or_descending(ordering: Ordering, reverse: bool) -> Ordering {
     match reverse {
         false => ordering,
         true => ordering.reverse(),
     }
 }
 
-fn sort_records(fasta_records: &mut Vec<FastaRecord>, sort_type: SortType, reverse: bool) {
+fn sort_records(fasta_records: &mut [FastaRecord], sort_type: SortType, reverse: bool) {
     match sort_type {
         SortType::Length => {
             fasta_records.par_sort_by(|a, b| {
                 let ord = a.record.seq().len().cmp(&b.record.seq().len());
-                ascending_or_descending::<usize>(ord, reverse)
+                ascending_or_descending(ord, reverse)
             });
         }
         SortType::Id => {
             fasta_records.par_sort_by(|a: &FastaRecord, b| {
-                let ord = a.record.id().cmp(&b.record.id());
-                ascending_or_descending::<&str>(ord, reverse)
+                let ord = a.record.id().cmp(b.record.id());
+                ascending_or_descending(ord, reverse)
             });
         }
         SortType::Gc => {
             fasta_records.par_sort_by(|a, b| {
                 let ord = a.gc.partial_cmp(&b.gc).unwrap();
-                ascending_or_descending::<f32>(ord, reverse)
+                ascending_or_descending(ord, reverse)
             });
         }
         SortType::Entropy => {
@@ -53,19 +52,19 @@ fn sort_records(fasta_records: &mut Vec<FastaRecord>, sort_type: SortType, rever
                     .partial_cmp(&b.entropy)
                     .expect("Invalid GC content, cannot sort.");
 
-                ascending_or_descending::<f32>(ord, reverse)
+                ascending_or_descending(ord, reverse)
             });
         }
         SortType::Softmask => {
             fasta_records.par_sort_by(|a: &FastaRecord, b| {
                 let ord: Ordering = a.softmask_count.cmp(&b.softmask_count);
-                ascending_or_descending::<usize>(ord, reverse)
+                ascending_or_descending(ord, reverse)
             });
         }
         SortType::Ambiguous => {
             fasta_records.par_sort_by(|a: &FastaRecord, b| {
                 let ord = a.ambiguous_count.cmp(&b.ambiguous_count);
-                ascending_or_descending::<usize>(ord, reverse)
+                ascending_or_descending(ord, reverse)
             });
         }
     }
@@ -90,19 +89,19 @@ pub fn fasta_sort(
             let gc = gc_content(record_seq);
 
             // Shannon Entropy
-            let (canonical, softmask_count, ambiguous_count) = nucleotide_counts(&record_seq);
+            let (canonical, softmask_count, ambiguous_count) = nucleotide_counts(record_seq);
             let probs = nucleotide_probabilities(&canonical);
             let entropy = shannon_entropy(&probs);
 
             let fasta_record = FastaRecord {
-                record: record,
-                gc: gc,
-                entropy: entropy,
-                softmask_count: softmask_count,
-                ambiguous_count: ambiguous_count,
+                record,
+                gc,
+                entropy,
+                softmask_count,
+                ambiguous_count,
             };
 
-            return Some(fasta_record);
+            Some(fasta_record)
         })
         .collect();
 

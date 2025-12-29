@@ -4,6 +4,7 @@ use crate::common::{nucleotide_counts, shannon_entropy};
 use std::path::PathBuf;
 
 #[allow(unused)]
+#[allow(clippy::too_many_arguments)]
 pub fn fasta_filter(
     fasta: Option<PathBuf>,
     min_len: usize,

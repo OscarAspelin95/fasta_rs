@@ -13,27 +13,19 @@ pub fn fasta_sample(
     let reader = bio_fasta_reader(fasta)?;
     let mut writer = bio_fasta_writer(outfile)?;
 
-    let mut fasta_records: Vec<Record> = Vec::new();
-
-    reader.records().for_each(|record| match record {
-        Ok(record) => {
-            fasta_records.push(record);
-        }
-        Err(_) => return,
-    });
+    let fasta_records: Vec<Record> = reader.records().filter_map(|record| record.ok()).collect();
 
     // Randomly choose records to keep.
-    let sample_by;
 
     if by <= 0.0 {
-        return Err(AppError::InvalidSampleValueError(by).into());
+        return Err(AppError::InvalidSampleValueError(by));
     }
 
-    if by <= 1.0 {
-        sample_by = (by * fasta_records.len() as f32) as usize;
+    let sample_by = if by <= 1.0 {
+        (by * fasta_records.len() as f32) as usize
     } else {
-        sample_by = by as usize;
-    }
+        by as usize
+    };
 
     let mut rng = rng();
     let sample = fasta_records.choose_multiple(&mut rng, sample_by);

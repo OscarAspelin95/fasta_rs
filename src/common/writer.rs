@@ -34,11 +34,11 @@ pub fn bio_fasta_writer(outfile: Option<PathBuf>) -> Result<Writer<Box<dyn Write
         Some(outfile) => {
             let f = File::create(outfile)?;
             let writer = Writer::new(Box::new(BufWriter::new(f)) as Box<dyn Write>);
-            return Ok(writer);
+            Ok(writer)
         }
         None => {
             let writer = Writer::new(Box::new(BufWriter::new(std::io::stdout())) as Box<dyn Write>);
-            return Ok(writer);
+            Ok(writer)
         }
     }
 }

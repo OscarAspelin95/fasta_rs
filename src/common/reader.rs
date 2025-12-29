@@ -38,7 +38,7 @@ fn validate_fastx(fastx: &PathBuf) -> Result<&PathBuf, AppError> {
         return Err(AppError::InvalidExtensionError(fastx.into()));
     }
 
-    return Ok(fastx);
+    Ok(fastx)
 }
 
 pub fn bio_fasta_reader(
@@ -62,13 +62,13 @@ pub fn bio_fasta_reader(
 pub fn needletail_fastx_reader(fastx: Option<PathBuf>) -> Result<Box<dyn FastxReader>, AppError> {
     match fastx {
         Some(fastx_file) => {
-            let reader = parse_fastx_file(&validate_fastx(&fastx_file)?)?;
+            let reader = parse_fastx_file(validate_fastx(&fastx_file)?)?;
 
-            return Ok(reader);
+            Ok(reader)
         }
         None => {
             let reader = parse_fastx_stdin()?;
-            return Ok(reader);
+            Ok(reader)
         }
     }
 }
