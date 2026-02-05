@@ -19,7 +19,7 @@ path = "src/main.rs"
 [dependencies]
 bio = { version = "2.3.0" }
 rayon = { version = "1.11.0" }
-clap = { version = "4.5.54", features = ["derive"] }
+clap = { version = "4.5.57", features = ["derive"] }
 log = { version = "0.4.29" }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = { version = "1.0.149" }
