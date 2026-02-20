@@ -17,6 +17,9 @@ pub enum AppError {
     #[error("Invalid range")]
     InvalidRangeError,
 
+    #[error("Invalid argument: {0}")]
+    InvalidArgError(String),
+
     #[error("Invalid regex pattern: {0}")]
     InvalidRegexPattern(String),
 

@@ -210,4 +210,14 @@ pub enum SubCommand {
         #[clap(short, long)]
         outfile: Option<PathBuf>,
     },
+    Chunk {
+        #[clap(short, long)]
+        fasta: Option<PathBuf>,
+
+        #[clap(short, long)]
+        num_contigs_per_file: usize,
+
+        #[clap(short, long)]
+        outdir: PathBuf,
+    },
 }

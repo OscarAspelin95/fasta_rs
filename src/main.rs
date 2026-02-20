@@ -5,6 +5,7 @@ use simple_logger::SimpleLogger;
 
 mod amplicon;
 mod args;
+mod chunk;
 mod compress;
 mod dispatch;
 mod errors;

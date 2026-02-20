@@ -1,5 +1,6 @@
 use crate::amplicon::fasta_amplicon;
 use crate::args::{App, SubCommand};
+use crate::chunk::fasta_chunk;
 use crate::compress::fasta_compress;
 use crate::errors::AppError;
 use crate::extract::fasta_extract;
@@ -91,6 +92,11 @@ pub fn dispatch(args: App) -> Result<(), AppError> {
             outfile,
         } => fasta_compress(fasta, max_hp_len, outfile)?,
         SubCommand::Reverse { fasta, outfile } => fasta_reverse(fasta, outfile)?,
+        SubCommand::Chunk {
+            fasta,
+            num_contigs_per_file,
+            outdir,
+        } => fasta_chunk(fasta, num_contigs_per_file, &outdir)?,
     };
 
     Ok(())

@@ -207,3 +207,8 @@ Optional arguments:
 <pre>
 <b>-o/--outfile</b> [stdout] - Output file.
 </pre>
+
+### fasta_rs `chunk`
+Divide a FASTA file into chunks with a specified number of contigs per file.
+
+`fasta_rs chunk --fasta <sequences.fasta> --num-contigs-per-chunk <usize> --outdir <outdir>`
