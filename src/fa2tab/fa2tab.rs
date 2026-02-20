@@ -1,11 +1,12 @@
-use crate::common::{
-    AppError, gc_content, get_bufwriter, needletail_fastx_reader, nucleotide_counts,
-    shannon_entropy, utils::nucleotide_probabilities,
+use crate::errors::AppError;
+use bio_utils_rs::io::{get_bufwriter, needletail_reader};
+use bio_utils_rs::nucleotide::{
+    gc_content, nucleotide_counts, nucleotide_probabilities, shannon_entropy,
 };
 use std::{io::Write, path::PathBuf};
 
 pub fn fasta_fa2tab(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<(), AppError> {
-    let mut reader = needletail_fastx_reader(fasta)?;
+    let mut reader = needletail_reader(fasta)?;
 
     let mut writer = get_bufwriter(outfile)?;
 
@@ -19,7 +20,7 @@ pub fn fasta_fa2tab(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<
 
         let record_seq = record.seq();
         let record_len = record_seq.len();
-        let gc_content: f32 = gc_content(&record_seq);
+        let gc: f64 = gc_content(&record_seq);
 
         // Entropy
         let (canonical, num_softmasked, num_ambiguous) = nucleotide_counts(&record_seq);
@@ -35,7 +36,7 @@ pub fn fasta_fa2tab(fasta: Option<PathBuf>, outfile: Option<PathBuf>) -> Result<
         writer.write_all(b"\t")?;
 
         // Gc content.
-        writer.write_all(gc_content.to_string().as_bytes())?;
+        writer.write_all(gc.to_string().as_bytes())?;
         writer.write_all(b"\t")?;
 
         // Entropy

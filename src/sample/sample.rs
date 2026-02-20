@@ -1,7 +1,6 @@
-use crate::common::AppError;
-use crate::common::reader::bio_fasta_reader;
-use crate::common::writer::bio_fasta_writer;
+use crate::errors::AppError;
 use bio::io::fasta::Record;
+use bio_utils_rs::io::{bio_fasta_reader, bio_fasta_writer};
 use rand::{prelude::*, rng};
 use std::path::PathBuf;
 

@@ -1,13 +1,30 @@
 use clap::Parser;
+use log::error;
 use rayon::ThreadPoolBuilder;
 use simple_logger::SimpleLogger;
 
-use fasta_rs::{args::App, common::AppError};
-
+mod amplicon;
+mod args;
+mod compress;
 mod dispatch;
+mod errors;
+mod extract;
+mod fa2tab;
+mod filter;
+mod grep;
+mod head;
+mod homopolymers;
+mod reverse;
+mod sample;
+mod shuffle;
+mod sort;
+mod split;
+mod stats;
+
+use args::App;
 use dispatch::dispatch;
 
-fn main() -> Result<(), AppError> {
+fn main() {
     SimpleLogger::new().init().unwrap();
 
     let args = App::parse();
@@ -17,7 +34,10 @@ fn main() -> Result<(), AppError> {
         .build_global()
         .expect("Failed to configure global thread pool.");
 
-    dispatch(args)?;
+    let result = dispatch(args);
 
-    Ok(())
+    match result {
+        Ok(_) => {}
+        Err(e) => error!("Error: {}", e),
+    }
 }

@@ -1,6 +1,8 @@
 use crate::args::SearchType;
-use crate::common::{AppError, bio_fasta_reader, get_bufwriter, reverse_complement, usize_sub};
+use crate::errors::AppError;
 use bio::pattern_matching::myers::MyersBuilder;
+use bio_utils_rs::io::{bio_fasta_reader, get_bufwriter};
+use bio_utils_rs::nucleotide::reverse_complement;
 use memchr::memmem;
 use rayon::prelude::*;
 use rstest::*;
@@ -144,7 +146,7 @@ pub fn amplicon_fuzzy_search<'a>(
 
         let mut reverse_starts: HashSet<usize> = HashSet::new();
         for (reverse_hit, _, _) in myers_reverse.find_all(seq, num_mismatch) {
-            let insert_length = match usize_sub(reverse_hit, start) {
+            let insert_length = match reverse_hit.saturating_sub(start) {
                 0 => continue,
                 insert_length => insert_length,
             };
@@ -206,7 +208,7 @@ pub fn amplicon_exact_search<'a>(
         let start = forward_hit + forward_len;
 
         for reverse_hit in &reverse_hits {
-            let insert_length: usize = usize_sub(*reverse_hit, start);
+            let insert_length: usize = reverse_hit.saturating_sub(start);
 
             // If amplicon is within allowed length.
             if insert_length >= *min_len && insert_length <= *max_len {

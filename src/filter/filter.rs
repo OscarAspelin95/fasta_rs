@@ -1,6 +1,6 @@
-use crate::common::utils::nucleotide_probabilities;
-use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
-use crate::common::{nucleotide_counts, shannon_entropy};
+use crate::errors::AppError;
+use bio_utils_rs::io::{get_bufwriter, needletail_reader};
+use bio_utils_rs::nucleotide::{nucleotide_counts, nucleotide_probabilities, shannon_entropy};
 use std::path::PathBuf;
 
 #[allow(unused)]
@@ -19,7 +19,7 @@ pub fn fasta_filter(
     max_entropy: f32,
     outfile: Option<PathBuf>,
 ) -> Result<(), AppError> {
-    let mut reader = needletail_fastx_reader(fasta)?;
+    let mut reader = needletail_reader(fasta)?;
     let mut writer = get_bufwriter(outfile)?;
 
     while let Some(record) = reader.next() {
@@ -52,11 +52,11 @@ pub fn fasta_filter(
             continue;
         }
 
-        // GC. NOTE - should we include softmasked bases in gc count?
-        let canonical_count = canonical.values().sum::<usize>();
+        // GC.
+        let canonical_count: usize = canonical.iter().sum();
 
-        let g_count: usize = *canonical.get(&b'G').unwrap_or(&0);
-        let c_count: usize = *canonical.get(&b'C').unwrap_or(&0);
+        let g_count: usize = canonical[2]; // G
+        let c_count: usize = canonical[1]; // C
 
         let gc_fraction: f32 = (g_count as f32 + c_count as f32) / canonical_count as f32;
         if gc_fraction < min_gc || gc_fraction > max_gc {

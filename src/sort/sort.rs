@@ -1,9 +1,10 @@
 use crate::args::SortType;
-use crate::common::AppError;
-use crate::common::utils::nucleotide_probabilities;
-use crate::common::writer::bio_fasta_writer;
-use crate::common::{bio_fasta_reader, gc_content, nucleotide_counts, shannon_entropy};
+use crate::errors::AppError;
 use bio::io::fasta::Record;
+use bio_utils_rs::io::{bio_fasta_reader, bio_fasta_writer};
+use bio_utils_rs::nucleotide::{
+    gc_content, nucleotide_counts, nucleotide_probabilities, shannon_entropy,
+};
 use rayon::prelude::*;
 use serde::Serialize;
 use std::cmp::Ordering;
@@ -12,7 +13,7 @@ use std::path::PathBuf;
 #[derive(Debug, Serialize)]
 struct FastaRecord {
     record: Record,
-    gc: f32,
+    gc: f64,
     entropy: f32,
     softmask_count: usize,
     ambiguous_count: usize,

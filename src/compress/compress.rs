@@ -1,4 +1,5 @@
-use crate::common::{AppError, get_bufwriter, needletail_fastx_reader};
+use crate::errors::AppError;
+use bio_utils_rs::io::{get_bufwriter, needletail_reader};
 use rstest::*;
 
 use std::{io::Write, path::PathBuf};
@@ -31,7 +32,7 @@ pub fn fasta_compress(
 ) -> Result<(), AppError> {
     assert!(max_hp_len > 0, "value of max_hp_len must be > 0.");
 
-    let mut reader = needletail_fastx_reader(fasta)?;
+    let mut reader = needletail_reader(fasta)?;
 
     // Output file writer.
     let mut writer = get_bufwriter(outfile)?;

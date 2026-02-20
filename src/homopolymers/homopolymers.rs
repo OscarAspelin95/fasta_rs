@@ -1,5 +1,5 @@
-use crate::common::AppError;
-use crate::common::{get_bufwriter, needletail_fastx_reader};
+use crate::errors::AppError;
+use bio_utils_rs::io::{get_bufwriter, needletail_reader};
 use needletail::parser::SequenceRecord;
 use rstest::*;
 use std::io::Write;
@@ -37,7 +37,7 @@ pub fn find_homopolymers_in_record(
     record: &SequenceRecord,
     min_hp_len: usize,
     strict: bool,
-    writer: &mut Box<dyn Write>,
+    writer: &mut Box<dyn Write + Send>,
 ) -> Result<(), AppError> {
     // Extract sequence information.
     let seq = record.seq();
@@ -93,7 +93,7 @@ pub fn fasta_homopolymers(
     strict: bool,
     outfile: Option<PathBuf>,
 ) -> Result<(), AppError> {
-    let mut reader = needletail_fastx_reader(fasta)?;
+    let mut reader = needletail_reader(fasta)?;
 
     // Output file writer.
     let mut writer = get_bufwriter(outfile)?;

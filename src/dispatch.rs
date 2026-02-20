@@ -1,19 +1,19 @@
-use fasta_rs::amplicon::fasta_amplicon;
-use fasta_rs::args::{App, SubCommand};
-use fasta_rs::common::AppError;
-use fasta_rs::compress::fasta_compress;
-use fasta_rs::extract::fasta_extract;
-use fasta_rs::fa2tab::fasta_fa2tab;
-use fasta_rs::filter::fasta_filter;
-use fasta_rs::grep::fasta_grep;
-use fasta_rs::head::fasta_head;
-use fasta_rs::homopolymers::fasta_homopolymers;
-use fasta_rs::reverse::fasta_reverse;
-use fasta_rs::sample::fasta_sample;
-use fasta_rs::shuffle::fasta_shuffle;
-use fasta_rs::sort::fasta_sort;
-use fasta_rs::split::fasta_split;
-use fasta_rs::stats::fasta_stats;
+use crate::amplicon::fasta_amplicon;
+use crate::args::{App, SubCommand};
+use crate::compress::fasta_compress;
+use crate::errors::AppError;
+use crate::extract::fasta_extract;
+use crate::fa2tab::fasta_fa2tab;
+use crate::filter::fasta_filter;
+use crate::grep::fasta_grep;
+use crate::head::fasta_head;
+use crate::homopolymers::fasta_homopolymers;
+use crate::reverse::fasta_reverse;
+use crate::sample::fasta_sample;
+use crate::shuffle::fasta_shuffle;
+use crate::sort::fasta_sort;
+use crate::split::fasta_split;
+use crate::stats::fasta_stats;
 
 pub fn dispatch(args: App) -> Result<(), AppError> {
     match args.command {
