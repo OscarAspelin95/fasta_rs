@@ -1,6 +1,6 @@
 [package]
 name = "fasta_rs"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2024"
 authors = ["oscar.aspelin@gmail.com"]
 description = "Multi purpose fasta toolkit"
@@ -8,10 +8,6 @@ license = "Apache-2.0"
 repository = "https://github.com/OscarAspelin95/fasta_rs"
 keywords = ["bioinformatics", "fasta"]
 categories = ["command-line-utilities"]
-
-[[bin]]
-name = "fasta_rs"
-path = "src/main.rs"
 
 [dependencies]
 bio = { version = "3.0.0" }
