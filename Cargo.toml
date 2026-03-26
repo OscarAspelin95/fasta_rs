@@ -12,7 +12,7 @@ categories = ["command-line-utilities"]
 [dependencies]
 bio = { version = "3.0.0" }
 bio_utils_rs = { version = "0.0.2", features = ["io"] }
-needletail = { version = "0.6.3", features = ["compression"] }
+needletail = { version = "0.7.1", features = ["compression"] }
 rayon = { version = "1.11.0" }
 clap = { version = "4.5.54", features = ["derive"] }
 log = { version = "0.4.29" }
